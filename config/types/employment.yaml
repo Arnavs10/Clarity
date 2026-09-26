@@ -1,0 +1,86 @@
+slug: employment
+label: Employment Offer Letter
+jurisdiction: IN
+version: 1
+
+corpus:
+  - id: ica_1872
+    name: Indian Contract Act 1872 (ss. 27, 73, 74)
+    path: data/corpus/employment/indian_contract_act_1872.txt
+  - id: sra_1963
+    name: Specific Relief Act 1963 (s. 14)
+    path: data/corpus/employment/specific_relief_act_1963.txt
+  - id: copyright_1957
+    name: Copyright Act 1957 (ss. 17, 19, 57)
+    path: data/corpus/employment/copyright_act_1957.txt
+
+taxonomy:
+  - id: compensation_structure
+    desc: Fixed pay, variable pay, joining bonus, deferred components
+    watch: A large share of CTC deferred or conditional, retention bonus with clawback
+
+  - id: probation_and_confirmation
+    desc: Probation length, confirmation criteria, terms during probation
+    watch: Probation extendable without limit, or confirmation left fully discretionary
+
+  - id: notice_period
+    desc: Notice length on either side, buyout option, notice during probation
+    watch: Asymmetric notice, buyout priced above actual salary for the period
+
+  - id: employment_bond
+    desc: Minimum service commitment backed by a monetary penalty
+    watch: A stipulated penalty figure, which s.74 limits to reasonable compensation
+
+  - id: non_compete
+    desc: Restriction on joining a competitor after the employment ends
+    watch: Any post-termination restraint, given s. 27 Indian Contract Act
+
+  - id: non_solicit
+    desc: Restriction on approaching clients or colleagues after exit
+    watch: Solicit restriction with no time limit or no defined client list
+
+  - id: confidentiality
+    desc: Definition of confidential information and how long it binds
+    watch: Perpetual confidentiality over information already public
+
+  - id: ip_assignment
+    desc: Ownership of work product, inventions, and prior work
+    watch: Assignment of IP created outside work hours, no carve-out for prior work
+
+  - id: working_hours_and_leave
+    desc: Hours, shift terms, leave entitlement, holiday policy
+    watch: Leave entitlement below the applicable state Shops and Establishments floor
+
+  - id: termination_grounds
+    desc: Grounds on which either side may end the employment
+    watch: Termination for cause defined so broadly it covers ordinary performance
+
+  - id: garden_leave
+    desc: Paid non-working notice period
+    watch: Garden leave that stacks on top of a separate non-compete
+
+  - id: variable_pay_clawback
+    desc: Conditions under which paid variable compensation is recovered
+    watch: Clawback triggered by resignation alone
+
+  - id: dispute_resolution
+    desc: Arbitration, seat, governing law, jurisdiction
+    watch: Arbitration seated in the employer home city with employer-appointed arbitrator
+
+  - id: boilerplate
+    desc: Recitals, definitions, addresses, severability, signature blocks
+    watch: null
+
+severity_scale: [none, low, medium, high]
+
+# Verified 22 Aug 2026. The service bond precedent that previously sat here was
+# removed: it was recalled rather than sourced. Bond rules now ground in s.74
+# Contract Act and s.14 Specific Relief Act, both statutory.
+anchors:
+  - Section 27 Indian Contract Act 1872 voids agreements in restraint of trade to that extent
+  - Restrictions during employment are generally enforceable; post-termination covenants fall foul of s.27 unless they only protect proprietary or confidential information
+  - Indian courts do not weigh the reasonableness of a post-termination restraint by its duration or geography, unlike US and UK courts, so a short non-compete is no safer than a long one
+  - Section 14 Specific Relief Act 1963 bars specific performance of a personal service contract, so an employer cannot compel continued work
+  - Section 74 Indian Contract Act 1872 allows only reasonable compensation for breach, not a stipulated penalty, whatever figure the contract names
+  - Section 19 Copyright Act 1957 requires an assignment of copyright to be in writing and signed
+  - Section 57 Copyright Act 1957 moral rights stay with the author and cannot be assigned away

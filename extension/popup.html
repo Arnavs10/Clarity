@@ -1,0 +1,49 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+:root{--ink:#111010;--paper:#FAF7F0;--white:#fff;--line:#E4DED0;--yellow:#F5C518;
+      --red:#C4362B;--magenta:#A82D7A;--green:#2F7D4F;--muted:#6B6459}
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:378px;max-height:552px;overflow-y:auto;background:var(--paper);
+     color:var(--ink);font:13px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.top{display:flex;align-items:center;justify-content:space-between;padding:13px 15px;
+     border-bottom:2px solid var(--ink);position:sticky;top:0;background:var(--paper)}
+.logo{font-weight:800;font-size:13px;display:flex;align-items:center;gap:7px}
+.dot{width:9px;height:9px;background:var(--yellow);border:2px solid var(--ink);border-radius:2px}
+.mute{background:none;border:1px solid var(--line);border-radius:3px;padding:4px 8px;
+      font:inherit;font-size:10px;color:var(--muted);cursor:pointer}
+.mute:hover{border-color:var(--ink);color:var(--ink)}
+.body{padding:14px 15px}
+.empty{text-align:center;padding:34px 12px;color:var(--muted);font-size:12px}
+.sum{display:flex;gap:8px;margin-bottom:13px}
+.chip{flex:1;background:var(--white);border:1.5px solid var(--line);
+      border-left:3px solid var(--ink);border-radius:3px;padding:8px 10px}
+.chip b{display:block;font-size:17px;font-weight:800}
+.chip span{font-size:9px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:700}
+.chip.hi{border-left-color:var(--red)} .chip.md{border-left-color:var(--magenta)}
+.f{background:var(--white);border:1.5px solid var(--line);border-radius:3px;
+   padding:11px 12px;margin-bottom:9px}
+.f.high{border-top:3px solid var(--red)} .f.medium{border-top:3px solid var(--magenta)}
+.f.low{border-top:3px solid var(--yellow)}
+.tag{display:inline-block;font-size:9px;font-weight:700;letter-spacing:.06em;
+     text-transform:uppercase;padding:2px 6px;border-radius:2px;margin:0 4px 6px 0;
+     border:1px solid var(--ink)}
+.t-high{background:var(--red);color:#fff;border-color:var(--red)}
+.t-medium{background:var(--magenta);color:#fff;border-color:var(--magenta)}
+.t-low{background:var(--yellow)}
+.t-b{background:var(--paper);color:var(--muted);border-color:var(--line)}
+.m{font-size:12px;font-weight:600;line-height:1.42}
+details{margin-top:8px}
+summary{font-size:10px;font-weight:700;cursor:pointer;background:var(--yellow);
+        padding:4px 7px;border-radius:2px;display:inline-block;list-style:none}
+summary::-webkit-details-marker{display:none}
+.span{margin-top:7px;padding:9px 10px;background:var(--paper);border-left:3px solid var(--ink);
+      font-family:Georgia,serif;font-size:11px;line-height:1.55;color:#333}
+.ok{background:#F1F7F2;border:1.5px solid var(--green);border-radius:3px;padding:12px;font-size:12px}
+.warn{background:#FFF8E1;border:1.5px solid var(--yellow);border-radius:3px;padding:11px;font-size:11.5px}
+.foot{padding:11px 15px;border-top:1px solid var(--line);font-size:10px;color:var(--muted)}
+</style></head><body>
+<div class="top"><div class="logo"><span class="dot"></span>Clarity</div>
+  <button class="mute" id="mute">Mute this site</button></div>
+<div class="body" id="body"><div class="empty">Open a contract or terms page.<br>
+  Nothing is scanned until a page looks like an agreement.</div></div>
+<div class="foot">Flags for review. Not legal advice.</div>
+<script src="popup.js"></script></body></html>

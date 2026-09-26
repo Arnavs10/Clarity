@@ -1,0 +1,24 @@
+# core
+pyyaml==6.0.2
+pdfplumber==0.11.4  # required for PDF upload; without it the API returns a clear 400
+python-docx==1.1.2
+beautifulsoup4==4.12.3
+
+# agent + tools
+langgraph>=0.2.0
+mcp>=1.0
+
+# model calls
+anthropic>=0.40.0
+
+# triage router
+scikit-learn>=1.4
+joblib>=1.3
+
+# interface
+streamlit>=1.41
+
+# web api, serves the site and the extension
+fastapi>=0.115
+uvicorn>=0.32
+python-multipart>=0.0.9

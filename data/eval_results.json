@@ -1,0 +1,32 @@
+{
+  "groundedness": {
+    "checked": 5,
+    "grounded": 5,
+    "rate": 1.0,
+    "failures": []
+  },
+  "verification": {
+    "clean_findings": 1,
+    "poisoned_kept": 0,
+    "poisoned_rejected": 1,
+    "passed": true
+  },
+  "extraction_failure": {
+    "unread": 2,
+    "findings": 0,
+    "partial_unread": 2,
+    "partial_of": 6,
+    "pass": true
+  },
+  "determinism": {
+    "runs": 12,
+    "stable": true
+  },
+  "api": {
+    "pass": true
+  },
+  "classification_all": {
+    "status": "not_measured",
+    "reason": "no labels"
+  }
+}

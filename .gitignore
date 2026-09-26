@@ -1,0 +1,28 @@
+__pycache__/
+*.pyc
+.venv/
+.env
+.DS_Store
+
+# uncomment if you would rather not publish source documents
+# data/raw/
+
+# Reconstructed text from real offer letters, used to test against real wording.
+# Useful locally, must never reach a public repo.
+tests/real/
+
+# Before v37.5 every audit saved the uploaded document's clauses here under a
+# temporary name. Corpus files are <type>_*.jsonl and are not matched.
+data/clauses/tmp*.jsonl
+data/clauses/_v37_*.jsonl
+
+# Drafts sent to /versions/save are someone's own documents.
+data/versions/
+
+# Names that must never be published, read by tools/prepush_check.py. A list of
+# things that must not be published cannot itself be published.
+.prepush-deny
+
+# Source documents. Statutes are published as extracted .txt in data/corpus.
+*.pdf
+*.docx

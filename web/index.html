@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clarity</title>
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<style>
+  :root{
+    --ink:#111010; --paper:#FAF7F0; --white:#FFFFFF; --line:#E4DED0;
+    --yellow:#F5C518; --yellow-deep:#D9A800;
+    --red:#C4362B; --magenta:#A82D7A; --green-ok:#2F7D4F;
+    --muted:#6B6459;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--paper);color:var(--ink);
+       font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+       line-height:1.5;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+
+  header{border-bottom:2px solid var(--ink);background:var(--paper);
+         position:sticky;top:0;z-index:20}
+  .bar{display:flex;align-items:center;justify-content:space-between;
+       padding:16px 0}
+  .logo{font-weight:800;font-size:1.6rem;letter-spacing:-.03em;
+        display:flex;align-items:center;gap:11px;cursor:pointer;user-select:none}
+  .logo:hover{opacity:.75}
+  .dot{width:15px;height:15px;background:var(--yellow);
+       border:2px solid var(--ink);border-radius:2px;
+       position:relative;top:.02em;flex:0 0 auto}
+  .tabs{display:flex;gap:2px}
+  .tab{background:none;border:2px solid transparent;padding:7px 15px;
+       font:inherit;font-size:.83rem;font-weight:600;cursor:pointer;
+       color:var(--muted);border-radius:3px}
+  .tab.on{background:var(--yellow);color:var(--ink);border-color:var(--ink)}
+
+  .hero{padding:74px 0 56px;border-bottom:1px solid var(--line)}
+  h1{font-size:3.3rem;font-weight:800;letter-spacing:-.035em;line-height:1.03;
+     max-width:15ch}
+  .mark{background:var(--yellow);padding:0 .12em;
+        box-shadow:inset 0 -.13em 0 var(--yellow-deep)}
+  .lede{margin-top:20px;font-size:1.08rem;color:var(--muted);max-width:56ch}
+
+  .panel{background:var(--white);border:2px solid var(--ink);border-radius:5px;
+         padding:26px;margin:34px 0;box-shadow:5px 5px 0 var(--yellow)}
+  label{display:block;font-size:.72rem;font-weight:700;letter-spacing:.09em;
+        text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  select,textarea{width:100%;font:inherit;padding:11px 13px;background:var(--paper);
+                  border:1.5px solid var(--line);border-radius:3px;color:var(--ink)}
+  select:focus,textarea:focus{outline:none;border-color:var(--ink)}
+  textarea{min-height:172px;resize:vertical;font-size:.86rem;line-height:1.6}
+  /* Top-aligned, so the two column headings sit on the same line. This was
+     align-items:end, which bottom-aligns the columns: fine when both were the same
+     height, wrong once the upload column grew a drop zone and a privacy note, since
+     that pushed the Document type label down the page while Upload stayed at the top. */
+  .row{display:grid;grid-template-columns:230px 1fr;gap:20px;align-items:start}
+  .drop{border:2px dashed var(--line);border-radius:4px;padding:26px;
+        text-align:center;cursor:pointer;background:var(--paper);
+        transition:border-color .12s}
+  .drop:hover,.drop.over{border-color:var(--yellow-deep);background:#FFFDF5}
+  .drop b{display:block;margin-bottom:3px}
+  .drop span{font-size:.8rem;color:var(--muted)}
+  .privacy{margin-top:12px;font-size:.76rem;line-height:1.6;color:var(--muted);
+           border-left:3px solid var(--green-ok);padding:9px 13px;
+           background:#FBFDFA;border-radius:2px}
+  .privacy b{color:var(--ink)}
+  .go{margin-top:20px;width:100%;background:var(--ink);color:var(--yellow);
+      border:none;padding:15px;font:inherit;font-weight:700;font-size:.95rem;
+      letter-spacing:.02em;border-radius:3px;cursor:pointer}
+  .go:hover{background:#000}
+  .go:disabled{opacity:.45;cursor:not-allowed}
+  .samples{margin-top:16px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+    font-size:.86rem;color:var(--muted)}
+  .samples button{font:inherit;font-weight:600;cursor:pointer;padding:7px 13px;
+    background:var(--white);color:var(--ink);border:2px solid var(--ink);border-radius:5px}
+  .samples button:hover{background:var(--yellow)}
+  .samples button:focus-visible{outline:3px solid var(--magenta);outline-offset:2px}
+  .recorded{background:var(--white);border:2px solid var(--ink);border-left:7px solid var(--yellow);
+    border-radius:4px;padding:11px 15px;margin-top:18px;font-size:.86rem;line-height:1.55}
+
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:30px 0}
+  .stat{background:var(--white);border:1.5px solid var(--line);
+        border-left:4px solid var(--ink);border-radius:3px;padding:15px 17px;
+        cursor:pointer;transition:transform .1s, box-shadow .1s}
+  .stat:hover{transform:translateY(-2px);box-shadow:0 3px 0 var(--line)}
+  .stat.on{box-shadow:0 3px 0 var(--ink)}
+  .stat.dim{opacity:.45}
+  .stat b{display:block;font-size:1.75rem;font-weight:800;letter-spacing:-.02em}
+  .stat span{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;
+             color:var(--muted);font-weight:600}
+  .stat.hi{border-left-color:var(--red)}
+  .stat.md{border-left-color:var(--magenta)}
+  .stat.ok{border-left-color:var(--green-ok)}
+
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:26px;
+         align-items:start;padding-bottom:70px}
+  h2{font-size:.74rem;text-transform:uppercase;letter-spacing:.11em;
+     color:var(--muted);margin-bottom:13px;font-weight:700}
+
+  .cl{font-family:Georgia,"Times New Roman",serif;font-size:.875rem;line-height:1.72;
+      padding:17px 19px 16px;margin-bottom:16px;background:var(--white);
+      border:1px solid var(--line);border-left:4px solid var(--line);
+      border-radius:3px;cursor:pointer;
+      transition:transform .12s, box-shadow .12s, border-color .12s}
+  .cl:hover{transform:translateX(3px);box-shadow:0 2px 0 var(--line);
+            border-color:var(--ink)}
+  /* The clause heading needs to read as a label, not as part of the prose. At one
+     font and one weight the list ran together into a wall and nothing was findable. */
+  .cl-head{display:block;font-family:var(--sans,system-ui),sans-serif;
+           font-size:.66rem;font-weight:700;letter-spacing:.09em;
+           text-transform:uppercase;color:var(--muted);
+           margin-bottom:9px;padding-bottom:7px;
+           border-bottom:1px dotted var(--line)}
+  .cl-body{display:block}
+  .cl.high{border-left-color:var(--red)}
+  .cl.medium{border-left-color:var(--magenta)}
+  .cl.low{border-left-color:var(--yellow-deep)}
+  .cl.clean{border-left-color:var(--green-ok);opacity:.62}
+  .cl.sel{box-shadow:0 0 0 2px var(--ink); transform:translateX(3px)}
+  .cl.unread{border-left-color:var(--red);background:repeating-linear-gradient(
+      45deg,transparent,transparent 7px,rgba(0,0,0,.028) 7px,rgba(0,0,0,.028) 14px)}
+  .cl-badge.t-unread{border-color:var(--red);color:var(--red);background:var(--white)}
+  .verdict.bad{border-left-color:var(--red)}
+  .cl-badge{float:right;font-size:.6rem;font-weight:700;letter-spacing:.06em;
+            text-transform:uppercase;padding:2px 6px;border-radius:2px;
+            margin-left:.6rem;border:1px solid var(--ink)}
+  .find{cursor:pointer;transition:box-shadow .12s}
+  .find:hover{box-shadow:3px 3px 0 var(--line)}
+  .find.sel{box-shadow:3px 3px 0 var(--ink)}
+  .jump{font-size:.7rem;color:var(--muted);font-weight:600;margin-top:.5rem;
+        display:inline-block}
+  .jump:hover{color:var(--ink);text-decoration:underline}
+  .verdict{border:2px solid var(--ink);border-radius:5px;padding:20px 24px;
+           margin:26px 0;box-shadow:5px 5px 0 var(--yellow)}
+  .verdict.risk{box-shadow:5px 5px 0 var(--red)}
+  .verdict h3{font-size:1.35rem;font-weight:800;letter-spacing:-.02em;
+              margin-bottom:.5rem}
+  .verdict p{font-size:.9rem;color:var(--muted);line-height:1.6}
+  .steps{margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+  .steps b{font-size:.72rem;text-transform:uppercase;letter-spacing:.09em;
+           color:var(--muted)}
+  .steps ol{margin:.6rem 0 0 1.1rem;font-size:.87rem;line-height:1.7}
+
+  .find{background:var(--white);border:1.5px solid var(--line);border-radius:4px;
+        padding:16px 18px;margin-bottom:12px}
+  .find.high{border-top:4px solid var(--red)}
+  .find.medium{border-top:4px solid var(--magenta)}
+  .find.low{border-top:4px solid var(--yellow-deep)}
+  .tags{display:flex;gap:6px;margin-bottom:9px;flex-wrap:wrap}
+  .tag{font-size:.62rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+       padding:3px 8px;border-radius:2px;border:1px solid var(--ink)}
+  .t-high{background:var(--red);color:#fff;border-color:var(--red)}
+  .t-medium{background:var(--magenta);color:#fff;border-color:var(--magenta)}
+  .t-low{background:var(--yellow);color:var(--ink)}
+  .t-basis{background:var(--paper);color:var(--muted);border-color:var(--line)}
+  .t-fixed{background:#e9f1e7;color:#2f5233;border-color:#b9cdb4}
+  .msg{font-size:.9rem;font-weight:600;line-height:1.45}
+  .note{font-size:.78rem;color:var(--muted);margin-top:7px;line-height:1.5}
+  details{margin-top:11px}
+  summary{font-size:.74rem;font-weight:700;color:var(--ink);cursor:pointer;
+          padding:6px 9px;background:var(--yellow);border-radius:2px;
+          display:inline-block;list-style:none}
+  summary::-webkit-details-marker{display:none}
+  .span{margin-top:9px;padding:12px 14px;background:var(--paper);
+        border-left:3px solid var(--ink);font-family:Georgia,serif;
+        font-size:.79rem;line-height:1.62;color:#333}
+  .src{font-size:.68rem;color:var(--muted);margin-top:7px;letter-spacing:.03em}
+
+  .warn{background:#FFF8E1;border:2px solid var(--yellow-deep);border-radius:4px;
+        padding:14px 17px;margin:18px 0;font-size:.85rem}
+  .err{background:#FDF0EE;border:1.5px solid var(--red);border-left:4px solid var(--red);
+       border-radius:4px;padding:15px 18px;margin:18px 0;font-size:.87rem;
+       line-height:1.55}
+  .err b{display:block;margin-bottom:.3rem;font-size:.95rem}
+  .err span{color:var(--muted);font-size:.8rem}
+  .clean-note{background:#F1F7F2;border:2px solid var(--green-ok);border-radius:4px;
+              padding:16px 18px;font-size:.87rem}
+  .draft{background:var(--white);border:2px solid var(--ink);border-radius:4px;
+         padding:18px;margin-top:22px;box-shadow:4px 4px 0 var(--magenta)}
+  .draft textarea{min-height:210px;font-family:Georgia,serif}
+  footer{border-top:1px solid var(--line);padding:26px 0;font-size:.76rem;
+         text-align:center;
+         color:var(--muted)}
+  .hide{display:none}
+  .spin{display:inline-block;width:13px;height:13px;border:2px solid var(--yellow);
+        border-top-color:var(--ink);border-radius:50%;animation:sp .7s linear infinite;
+        vertical-align:-2px;margin-right:7px}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  @media(max-width:900px){.split{grid-template-columns:1fr}
+    .stats{grid-template-columns:repeat(2,1fr)}h1{font-size:2.3rem}
+    .row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header><div class="wrap bar">
+  <div class="logo" id="logo" title="Start over">Clarity <span class="dot"></span></div>
+  <div class="tabs">
+    <button class="tab on" id="tab-home">Audit</button>
+    <button class="tab" id="tab-how">How it decides</button>
+  </div>
+</div></header>
+
+<main id="page-home">
+  <section class="hero"><div class="wrap">
+    <h1>Know what you're <span class="mark">signing</span> before you sign it.</h1>
+    <p class="lede">Upload an offer letter, a rent agreement or a loan agreement.
+      Where the law speaks to a clause, the finding shows you the passage it rests on.
+      Where it does not, the finding says so.</p>
+  </div></section>
+
+  <div class="wrap">
+    <div class="panel" id="input-panel">
+      <div class="row" id="pick">
+        <div>
+          <label for="dt">Document type</label>
+          <select id="dt"><option value="">loading...</option></select>
+        </div>
+        <div>
+          <label>Upload</label>
+          <input type="file" id="file" class="hide" accept=".pdf,.docx,.txt">
+          <div class="drop" id="drop">
+            <b>Drop a file or click</b><span>PDF, DOCX or TXT</span>
+          </div>
+          <p class="privacy">
+            <b>Nothing is stored.</b> Read in memory, discarded on response, no
+            account. Clause text is sent to the model provider to be read.
+          </p>
+        </div>
+      </div>
+      <div style="margin-top:18px" id="paste">
+        <label for="txt">Or paste the text</label>
+        <textarea id="txt" placeholder="Paste your contract here..."></textarea>
+      </div>
+      <button class="go" id="go">Audit this contract</button>
+      <div class="samples hide" id="samples">
+        <span id="samples-lead">No contract to hand? Open a recorded audit of a fictional one:</span>
+        <span id="sample-list"></span>
+      </div>
+      <p class="note hide" id="public-note"></p>
+    </div>
+
+    <div id="msg"></div>
+    <div id="out" class="hide">
+      <div class="stats">
+        <div class="stat on" id="f-all" data-f="all"><b id="s-cl">0</b>
+          <span>Clauses &middot; show all</span></div>
+        <div class="stat hi" id="f-high" data-f="high"><b id="s-hi">0</b>
+          <span>High severity</span></div>
+        <div class="stat md" id="f-flag" data-f="flagged"><b id="s-fl">0</b>
+          <span>Flagged</span></div>
+        <div class="stat ok" id="f-skip" data-f="skipped"><b id="s-sk">0</b>
+          <span>Not checked</span></div>
+      </div>
+      <div id="verdict"></div>
+      <div class="split">
+        <div><h2>Contract &mdash; click a clause to see its findings</h2>
+          <div id="clauses"></div></div>
+        <div><h2>Findings &mdash; click one to jump to the clause</h2>
+          <div id="finds"></div><div id="draft"></div></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<main id="page-how" class="hide"><div class="wrap">
+  <section class="hero" style="border:none">
+    <h1>Every flag shows <span class="mark">the law</span> behind it.</h1>
+    <p class="lede">Clarity does not give you an opinion. It points at the passage
+      of Indian law a clause runs up against, so you can check the reasoning
+      yourself rather than take our word for it.</p>
+  </section>
+
+  <div class="panel">
+    <h2>What a flag means</h2>
+    <div class="find high"><div class="tags"><span class="tag t-high">High</span></div>
+      <div class="msg">Real money or real freedom is at stake.</div>
+      <div class="note">Worth resolving before you sign.</div></div>
+    <div class="find medium"><div class="tags"><span class="tag t-medium">Medium</span></div>
+      <div class="msg">Worth pushing back on.</div>
+      <div class="note">Signing anyway is survivable, but you can ask.</div></div>
+    <div class="find low"><div class="tags"><span class="tag t-low">Low</span></div>
+      <div class="msg">Slightly off the usual terms.</div>
+      <div class="note">Mention it, do not fight over it.</div></div>
+  </div>
+
+  <div class="panel">
+    <h2>What happens to your document</h2>
+    <p class="note" style="font-size:.9rem;line-height:1.75;color:var(--ink)">
+      Nothing is stored. Your contract is read in memory, audited clause by clause,
+      and discarded once the result is returned. It is not written to disk, not saved
+      to a database, and not retained after you close the page. There is no account,
+      no sign in, and no history.</p>
+    <p class="note" style="margin-top:12px">
+      An offer letter or a lease carries your name, your salary or your address.
+      A tool that asks you to hand that over and keeps it has taken more than it
+      needed to answer your question.</p>
+  </div>
+
+  <div class="panel">
+    <h2>Where the reasoning comes from</h2>
+    <p class="note" style="font-size:.9rem;line-height:1.75;color:var(--ink)">
+      Some flags rest on an Act of Parliament, and those quote the section directly.
+      Some rest on a regulator's direction, which binds the companies it covers.
+      Some rest on official guidance that is not binding, and Clarity says so rather
+      than implying otherwise. And some rest on nothing more than how unusual a term
+      is raised as a judgement about the drafting, which is said plainly as a judgement and
+      never dressed up as law.</p>
+    <p class="note" style="margin-top:14px;padding-top:14px;border-top:1px solid var(--line)">
+      Wherever a flag rests on a written source, that source is shown to you. If it
+      cannot be shown, the flag is withheld rather than displayed. A flag you cannot
+      check is a flag you should not trust.</p>
+  </div>
+
+  <div class="panel">
+    <h2>What it will not do</h2>
+    <p class="note" style="font-size:.9rem;line-height:1.75;color:var(--ink)">
+      It is not a lawyer and does not replace one. It reads the clause types that
+      most commonly cause problems, which is not every clause type that exists.
+      Nothing flagged means nothing matched, not that a document is safe. And it
+      never sends anything on your behalf: the negotiation message is a draft for
+      you to read, edit and send yourself.</p>
+  </div>
+
+  <footer>Flags for review. Not legal advice.</footer>
+</div></main>
+
+<footer><div class="wrap">Clarity · Flags for review, not legal advice ·
+  Statutes from India Code, the Ministry of Housing and the RBI · Nothing stored
+  </div></footer>
+
+<script>
+// Served by the API itself (the public demo, or http://localhost:8000/) the API is
+// this same origin. Served from web/ on port 5500 for local work, it is port 8000.
+const API = localStorage.getItem("clauseApi") ||
+  ((location.protocol === "file:" || location.port === "5500")
+    ? "http://localhost:8000" : location.origin);
+const $ = id => document.getElementById(id);
+// severity -> [pill class, clause class]. Referenced by render(); a rewrite once
+// declared this as SEVW and used SEV, which crashed the whole page after the
+// stats had already drawn, so the audit looked broken when it had succeeded.
+const SEV = {high:["t-high","high"], medium:["t-medium","medium"], low:["t-low","low"]};
+let picked = null, last = null;
+// Which audit is on screen. The audit call is awaited, but the draft call is not:
+// render() kicks it off and returns, and the button is re-enabled before it lands.
+// So a draft for one document could arrive after the next document had been
+// rendered and write itself into the page under the wrong contract's name. That is
+// not theoretical. With the provider paced against a free-tier limit a draft can
+// take minutes, and one offer letter was shown quoting a confidentiality clause
+// from a different internship agreement audited seven minutes earlier, in the
+// one artefact a user sends to an employer under their own name.
+// Every network response now carries the run it belongs to and is dropped if the
+// run has moved on.
+let runId = 0;
+
+$("tab-home").onclick = () => swap(true);
+$("tab-how").onclick  = () => swap(false);
+function swap(home){
+  $("page-home").classList.toggle("hide", !home);
+  $("page-how").classList.toggle("hide", home);
+  $("tab-home").classList.toggle("on", home);
+  $("tab-how").classList.toggle("on", !home);
+  window.scrollTo(0,0);
+}
+
+// Populate from the backend rather than hardcoding. Adding a document type is a
+// config change on the server, and the interface should not need editing for it.
+(async () => {
+  try{
+    const res = await fetch(API+"/doc-types");
+    const {types, public: isPublic, live, repo} = await res.json();
+    $("dt").innerHTML = types.map(t =>
+      '<option value="'+t.slug+'">'+esc(t.label)+'</option>').join("");
+    if(isPublic) publicMode(live, repo);
+  }catch(e){
+    $("dt").innerHTML = '<option value="employment">Employment offer letter</option>'+
+      '<option value="rental">Rental agreement</option>'+
+      '<option value="loan">Loan agreement</option>';
+  }
+})();
+
+// The public demo says what it is. With live audits off, the controls that would
+// send a document are hidden and the recorded samples are the interface.
+function publicMode(live, repo){
+  const run = repo ? ' <a href="'+esc(repo)+'" target="_blank" rel="noopener">Run Clarity '+
+    'on your own machine</a> to audit your own contract.' : "";
+  if(!live){
+    ["pick", "paste", "go"].forEach(id => $(id).classList.add("hide"));
+    $("samples-lead").textContent = "Open a recorded audit:";
+    $("public-note").innerHTML = "This public demo shows audits of fictional documents, "+
+      "recorded from a live run of the same code."+run;
+  } else {
+    $("public-note").innerHTML = "Live audits here share a free model allowance: a few "+
+      "documents a day, several minutes each. The samples open at once."+run;
+  }
+  $("public-note").classList.remove("hide");
+}
+
+// Recorded samples: this pipeline's real output on fictional documents, saved by
+// tools/record_samples.py. Opening one sends nothing to the model.
+(async () => {
+  try{
+    const res = await fetch("samples/index.json");
+    if(!res.ok) return;
+    const {samples} = await res.json();
+    if(!samples || !samples.length) return;
+    $("sample-list").innerHTML = samples.map((a, i) =>
+      '<button type="button" data-i="'+i+'">'+esc(a.label)+'</button>').join(" ");
+    $("sample-list").querySelectorAll("button").forEach(b =>
+      b.onclick = () => openSample(samples[+b.dataset.i]));
+    $("samples").classList.remove("hide");
+  }catch(e){ /* nothing recorded yet, so the strip stays hidden */ }
+})();
+
+async function openSample(a_s){
+  const myRun = ++runId;
+  $("out").classList.add("hide");
+  ["verdict","clauses","finds","draft"].forEach(id => { if($(id)) $(id).innerHTML = ""; });
+  $("msg").innerHTML = "";
+  try{
+    const res = await fetch("samples/"+a_s.file);
+    if(!res.ok) throw new Error("the sample could not be loaded ("+res.status+")");
+    const rec = await res.json();
+    if(myRun !== runId) return;
+    const d = rec.audit;
+    // The draft from the same run. Asking the model again would spend the allowance
+    // and could come back as a different message.
+    d.recorded_draft = rec.draft;
+    last = d;
+    render(d, myRun);
+    show("recorded", "<b>Sample audit of a fictional "+esc(a_s.label.toLowerCase())+".</b> "+
+      "This is Clarity's real output from a live run.");
+  }catch(err){
+    if(myRun !== runId) return;
+    fail(err.message || String(err));
+  }
+}
+
+$("logo").onclick = () => location.reload();
+
+$("drop").onclick = () => {
+  const f = $("file");
+  if(!f){ location.reload(); return; }   // belt and braces
+  // Clear first. A file input fires no change event when the same path is chosen
+  // again, and after one upload the element still held the previous file, so the
+  // picker looked broken and a page refresh was the only way to audit a second
+  // document.
+  f.value = "";
+  f.click();
+};
+$("file").onchange = e => { picked = e.target.files[0];
+  if(picked) $("drop").innerHTML = "<b>"+picked.name+"</b><span>click to change</span>"; };
+["dragover","dragleave","drop"].forEach(ev => $("drop").addEventListener(ev, e => {
+  e.preventDefault();
+  $("drop").classList.toggle("over", ev === "dragover");
+  if(ev === "drop"){ picked = e.dataTransfer.files[0];
+    $("drop").innerHTML = "<b>"+picked.name+"</b><span>click to change</span>"; }
+}));
+
+$("go").onclick = async () => {
+  const dt = $("dt").value, text = $("txt").value.trim();
+  if(!picked && text.length < 100){
+    return fail("text too short");
+  }
+  const myRun = ++runId;
+  $("go").disabled = true;
+  $("go").innerHTML = '<span class="spin"></span>Reading clauses...';
+  // Clear the previous document before starting. The old results stayed on screen
+  // under the new filename while the next audit ran, so a loan agreement's findings
+  // sat beneath an offer letter's name for the length of the run.
+  $("out").classList.add("hide");
+  ["verdict","clauses","finds","draft"].forEach(id => { if($(id)) $(id).innerHTML = ""; });
+  ["s-cl","s-hi","s-fl","s-sk"].forEach(id => { if($(id)) $(id).textContent = "0"; });
+  $("msg").innerHTML = "";
+  try{
+    let res;
+    if(picked){
+      const fd = new FormData(); fd.append("file", picked);
+      res = await fetch(API+"/audit/upload?doc_type="+dt, {method:"POST", body:fd});
+    } else {
+      res = await fetch(API+"/audit", {method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({text, doc_type: dt})});
+    }
+    if(!res.ok){ const e = await res.json().catch(()=>({}));
+      throw new Error(e.detail || ("server returned "+res.status)); }
+    const body = await res.json();
+    if(myRun !== runId) return;          // a newer audit is already on screen
+    last = body;
+    render(last, myRun);
+  }catch(err){
+    if(myRun !== runId) return;
+    fail(err.message || String(err));
+  }finally{
+    if(myRun === runId){
+      $("go").disabled = false; $("go").textContent = "Audit this contract";
+    }
+  }
+};
+
+function show(kind, html){ $("msg").innerHTML = '<div class="'+kind+'">'+html+'</div>'; }
+
+// A raw exception string in a red box reads as a broken site. Each known failure
+// gets a sentence about what happened and a sentence about what to do, and anything
+// unrecognised still gets a shape rather than a stack trace.
+const FRIENDLY = [
+  [/already running/i,
+   ["Another audit is running on this demo.",
+    "Each takes several minutes on the free model allowance. Try again shortly, or open a sample."]],
+  [/switched off on this public demo/i,
+   ["Live audits are off on this demo.",
+    "Open a sample to see a recorded audit, or run Clarity on your own machine."]],
+  [/failed to fetch|networkerror|load failed/i,
+   ["Clarity could not reach its backend.",
+    "The analysis service is not running. Start it with: uvicorn src.api:app --port 8000"]],
+  [/rate limit|429|quota/i,
+   ["The analysis service is at its limit for now.",
+    "Free model tiers cap how much can be read per minute. Wait a minute and try again."]],
+  [/rejected the key|401|403|api key/i,
+   ["The analysis service is not configured.",
+    "An API key is missing or wrong. Check the .env file, then restart the backend."]],
+  [/too short/i,
+   ["That does not look like a contract.",
+    "Paste at least a paragraph, or choose a PDF, DOCX or TXT file."]],
+  [/pdfplumber|PDF support needs/i,
+   ["This server cannot read PDFs yet.",
+    "A Python package is missing. Activate the project virtualenv and restart the "+
+    "backend, or paste the text instead."]],
+  [/scanned image|could not read/i,
+   ["That file could not be read.",
+    "It may be a scanned image rather than text. Try a text-based PDF, or paste the text."]],
+  [/could not segment/i,
+   ["This file could not be split into clauses.",
+    "It may be a scanned image rather than text. Try a text-based PDF, or paste the text."]],
+  [/unknown doc_type/i,
+   ["That document type is not configured.",
+    "Pick one from the dropdown and try again."]],
+];
+
+function friendly(msg){
+  for(const [re, [head, hint]] of FRIENDLY){
+    if(re.test(msg)) return "<b>"+esc(head)+"</b>"+esc(hint ? "" : "")+
+      '<div class="hint">'+esc(hint)+'</div>';
+  }
+  return "<b>Something went wrong reading that document.</b>"+
+    '<div class="hint">'+esc(msg.slice(0,180))+'</div>';
+}
+
+const esc = s => (s||"").replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+const worst = f => f.length ? f.map(x=>x.severity)
+  .sort((a,b)=>({high:3,medium:2,low:1}[b]||0)-({high:3,medium:2,low:1}[a]||0))[0] : null;
+
+// One number for "how many clauses were not read", derived once and used by the
+// tile, the clause hatching and the verdict alike. These used to be computed
+// separately from two different fields, and they disagreed: a letter with 2 of 13
+// clauses unread showed a tile saying 2, hatched all 13, and printed the verdict for
+// a document where nothing had been read. With no backend at all nothing is read, so
+// the count is every clause.
+function unreadCount(d){
+  return d.extraction_available === false ? d.clauses : (d.unread || 0);
+}
+
+// What the rule set looked for. Zero findings on its own is a shrug: a reader
+// cannot tell a document that passed from one nobody checked properly, and has
+// no way to see what sits outside the tool's scope. Naming the areas turns
+// silence into a claim they can check, and shows the edges of the scope honestly.
+function coverageNote(d){
+  if(!d.checks || !d.checks.length) return "";
+  return '<div class="clean-note" style="margin-top:14px">'+
+    '<b>What was checked</b><br>'+
+    d.checks.length+' areas of this document type, clause by clause: '+
+    d.checks.map(esc).join(', ')+'.<br><br>'+
+    'Anything outside that list was not looked at. The rules cover what most '+
+    'commonly goes wrong, not everything that can.'+
+    '</div>';
+}
+
+function verdict(d, all, issues){
+  issues = issues || all;
+  const high = all.filter(f=>f.severity==="high").length;
+  const med  = all.filter(f=>f.severity==="medium").length;
+  // Clauses, not findings. Two findings on one clause is one clause worth reading,
+  // and the headline used to say "5 clauses would cost you real money" when three
+  // clauses carried five findings between them.
+  const highClauses = new Set(all.filter(f=>f.severity==="high")
+                                 .map(f=>f.heading||f.clause_id)).size;
+  // Only grounded tiers carry a passage. Saying "each one shows the law it rests
+  // on" over a list that is mostly norm tier is the flattening the cards avoid.
+  const grounded = issues.filter(f=>["statutory","regulatory","policy"].includes(f.basis)).length;
+  const norms    = issues.length - grounded;
+  const nIss     = issues.length;
+  const iHigh    = issues.filter(f=>f.severity==="high").length;
+  const iMed     = issues.filter(f=>f.severity==="medium").length;
+  const iLow     = issues.filter(f=>f.severity==="low").length;
+
+  // An unread document is not a clean document. Five of six signals on this page
+  // used to say "clean" when extraction had failed on every clause, and only the
+  // banner dissented. Anyone scrolling past it, or reading on a phone, saw a
+  // contract that was never opened presented as a contract that passed.
+  // A document read as the wrong type outranks every other state on this page.
+  //
+  // An internship offer letter was uploaded as a loan agreement. The page showed
+  // "1 clause here would cost you real money or real freedom", a high-severity
+  // finding about the entire balance being called in, and a negotiation draft
+  // quoting the clause where the candidate confirms his degree. Nothing on screen
+  // suggested anything was wrong, because nothing in the system had looked.
+  if(d.type_status === "mismatch"){
+    return '<div class="verdict bad"><h3>This does not look like the document type you chose</h3>'+
+      '<p>'+esc(d.type_message||"")+'</p>'+
+      '<p><b>No findings are shown.</b> The rules for the wrong type either miss '+
+      'what matters or flag things that are not there, so showing them under a '+
+      'warning would only invite you to read the findings and skim the warning. '+
+      'The clauses are listed below so you can see what was read.</p>'+
+      (d.type_suggested
+        ? '<p>Change the document type to <b>'+esc(d.type_suggested)+'</b> and run it again.</p>'
+        : '')+
+      '</div>';
+  }
+
+  if(d.type_status === "unrecognised"){
+    return '<div class="verdict bad"><h3>This may not be a contract of any type Clarity knows</h3>'+
+      '<p>'+esc(d.type_message||"")+'</p>'+
+      '<p>Anything below was produced by the '+esc(d.doc_type)+' rules. Read it as a '+
+      'starting point rather than as a verdict.</p></div>';
+  }
+
+  const unreadN = unreadCount(d);
+  if(unreadN >= d.clauses){
+    // Some findings survive a dead provider, because a few facts are read off the
+    // clause by pattern rather than by the model. Saying "no clause was read" over
+    // a list that has findings in it would be its own small lie, so the sentence
+    // changes when there is something below to account for.
+    const fixed = all.length;
+    return '<div class="verdict bad"><h3>This document was not checked</h3>'+
+      '<p>'+esc(d.warning||"")+'</p>'+
+      '<p><b>Nothing below is a full verdict.</b> '+
+      (fixed
+        ? 'The model read none of it. The '+fixed+' finding'+(fixed===1?'':'s')+
+          ' below came from patterns matched directly in your text, so '+
+          (fixed===1?'it is':'they are')+' real, but everything the model would '+
+          'have caught is still missing. No clause here can be called safe.'
+        : 'No clause was read, so no clause can be called safe.')+
+      ' Try again once the limit resets, or run it against a different '+
+      'provider.</p></div>';
+  }
+  if(unreadN){
+    return '<div class="verdict bad"><h3>Incomplete: '+unreadN+' of '+d.clauses+
+      ' clauses were not checked</h3><p>'+esc(d.warning||"")+'</p>'+
+      '<p>The '+(d.clauses-unreadN)+' clauses that were read produced '+all.length+
+      ' finding'+(all.length===1?'':'s')+'. The unread ones are marked below and '+
+      'carry no verdict either way.</p></div>';
+  }
+  if(!all.length){
+    return '<div class="verdict"><h3>Nothing flagged in this document.</h3>'+
+      '<p>All '+d.clauses+' clauses were checked against the rule set and none '+
+      'triggered a rule. That is a good sign, not a guarantee: the rules cover '+
+      'the clause types that most commonly cause problems, not every possible one. '+
+      'A lawyer reading the same document may still find something.</p></div>';
+  }
+  // Issues, like the line under it, and worded to be true of every high finding.
+  // "4 clauses here would cost you real money or real freedom" stood over a single
+  // blank left in a template, which costs neither.
+  const lead = iHigh
+    ? iHigh+' serious issue'+(iHigh>1?'s':'')+' to settle before you sign.'
+    : 'Nothing severe, but '+nIss+' issue'+(nIss>1?'s':'')+' worth pushing back on.';
+  return '<div class="verdict risk"><h3>'+esc(lead)+'</h3>'+
+    '<p>'+nIss+' issue'+(nIss>1?'s':'')+' across '+
+    (d.flagged||highClauses)+' of '+d.clauses+' clauses'+([iHigh?iHigh+' high':'', iMed?iMed+' medium':'', iLow?iLow+' low':'']
+                 .filter(Boolean).join(', ')
+                 .replace(/^(.+)$/, ': $1'))+'. '+
+    (grounded && norms
+       ? grounded+' show'+(grounded>1?'':'s')+' the passage of law it rests on. '+
+         'The other '+norms+' '+(norms>1?'are':'is')+' a drafting judgement '+
+         'rather than a point of law.'
+       : grounded
+         ? 'Each one below shows the passage of law it rests on.'
+         : 'These are drafting judgements rather than points of law.')+'</p>'+
+    '<div class="steps"><b>What to do next</b><ol>'+
+      '<li>Read the high severity findings first. Click one to see the clause.</li>'+
+      '<li>Open &ldquo;show the law this rests on&rdquo; to check the reasoning yourself.</li>'+
+      '<li>Use the draft at the bottom to ask for changes. Edit it before sending.</li>'+
+    '</ol></div></div>';
+}
+
+function render(d, myRun){
+  $("out").classList.remove("hide");
+  $("s-cl").textContent = d.clauses;
+  // Unread clauses make the severity counts meaningless rather than zero, so show a
+  // dash instead of a number that reads as "none found".
+  const unreadN = unreadCount(d);
+  $("s-hi").textContent = unreadN >= d.clauses ? "\u2014" : d.high;
+  $("s-fl").textContent = unreadN >= d.clauses ? "\u2014" : d.flagged;
+  // This tile used to read from the triage count, so a document where extraction
+  // failed on every clause showed "not analysed: 0". It then read from d.unread,
+  // which is zero when there is no backend at all, so a document where nothing was
+  // read showed 0 beside thirteen hatched clauses.
+  $("s-sk").textContent = unreadN + (d.skipped_by_triage || 0);
+  $("msg").innerHTML = "";
+
+  // Carry the clause with the finding. The negotiation draft quotes it, and
+  // without it every document produced the same letter.
+  const all = d.results.flatMap(r => r.findings.map(f =>
+    ({...f, ci:r.index, heading:r.heading, clause_text:r.text})));
+  const okAll = d.results.flatMap(r => (r.reassurances||[]).map(f => ({...f, ci:r.index})));
+
+  // One card per problem, not per occurrence.
+  //
+  // On a real internship letter the same broad-termination rule fired on four
+  // clauses and the page showed four identical cards, reported as "8 findings" when
+  // there were four problems. Repetition reads as a bug, and it buries the findings
+  // that are different under copies of the one that is not. The rule is the
+  // problem; the clauses are where it appears, so they become jump links on a single
+  // card. Severity is the worst occurrence, and every piece of matched text is kept.
+  const SEV_RANK = {high:3, medium:2, low:1, none:0};
+  // "terminated forthwith." and "terminated forthwith" are one match, not two.
+  const sameEv = (a, b) => a.toLowerCase().replace(/[^a-z0-9 ]+/g, " ").replace(/\s+/g, " ").trim()
+                        === b.toLowerCase().replace(/[^a-z0-9 ]+/g, " ").replace(/\s+/g, " ").trim();
+  const addEv = (list, e) => { if(!list.some(x => sameEv(x, e))) list.push(e); };
+  const issues = [];
+  const byRule = {};
+  all.forEach(f => {
+    let g = byRule[f.rule_id];
+    if(!g){
+      g = byRule[f.rule_id] = {...f, where:[], evidence:[]};
+      (f.evidence||[]).forEach(e => addEv(g.evidence, e));
+      issues.push(g);
+    } else {
+      if((SEV_RANK[f.severity]||0) > (SEV_RANK[g.severity]||0)) g.severity = f.severity;
+      (f.evidence||[]).forEach(e => addEv(g.evidence, e));
+    }
+    g.where.push({ci:f.ci, heading:f.heading});
+  });
+
+  // The tile counts problems too. It counted occurrences, so one blank repeated in
+  // four clauses showed "4 high severity" above a verdict saying "1 high".
+  if(unreadN < d.clauses) $("s-hi").textContent = issues.filter(g => g.severity === "high").length;
+  $("verdict").innerHTML = verdict(d, all, issues);
+
+  $("clauses").innerHTML = d.results.map((r,i) => {
+    const w = worst(r.findings);
+    const n = r.findings.length;
+    // Never green for a clause the model could not read. Green is reserved for
+    // "checked against every rule and nothing fired". A clause that was never read
+    // has earned no colour at all.
+    const unread = r.extraction_failed === true || d.extraction_available === false;
+    const klass = unread ? "unread" : (w ? SEV[w][1] : "clean");
+    const badge = unread
+      ? '<span class="cl-badge t-unread">not checked</span>'
+      : n
+      ? '<span class="cl-badge t-'+w+'">'+n+' finding'+(n>1?'s':'')+'</span>'
+      : (r.triage_keep===false
+          ? '<span class="cl-badge t-basis" style="border-color:var(--line);color:var(--muted)">skipped as low risk</span>'
+          : '');
+    // Split the heading off the body. Rendering both as one block of serif prose
+    // made the column read as a wall of text with no scannable entry point.
+    const head = (r.heading||"").trim();
+    const body = head && r.text.trim().startsWith(head)
+      ? r.text.trim().slice(head.length).replace(/^[\s.:-]+/, "")
+      : r.text;
+    return '<div class="cl '+klass+'" id="cl-'+r.index+'" data-i="'+r.index+
+      '" data-sev="'+(w||"")+'" data-skipped="'+(r.triage_keep===false?"1":"0")+'">'+
+      badge +
+      (head ? '<span class="cl-head">'+esc(head)+'</span>' : '') +
+      '<span class="cl-body">'+esc(body.slice(0,520))+
+      (body.length>520?"...":"")+'</span></div>';
+  }).join("");
+
+  if(!all.length){
+    $("finds").innerHTML = okAll.length
+      ? '<div class="clean-note"><b>'+okAll.length+' clause'+(okAll.length>1?'s':'')+
+        ' checked and found acceptable.</b><br>'+
+        okAll.map(f=>esc(f.message)).join('<br>')+'</div>'
+      : unreadCount(d) > 0
+      ? '<div class="clean-note" style="border-left-color:var(--red)"><b>This document '+
+        'was not checked.</b><br>No rule could run, so the absence of findings here '+
+        'says nothing about the contract.</div>'
+      : '<div class="clean-note"><b>No rule fired on this document.</b><br>'+
+        'Click any clause on the left to read it in full.</div>' + coverageNote(d);
+    $("draft").innerHTML = "";
+    wire(d);
+    return;
+  }
+
+  $("finds").innerHTML = issues.map((f,idx) =>
+    '<div class="find '+f.severity+'" id="fd-'+idx+'" data-ci="'+f.ci+
+      '" data-cis="'+f.where.map(w=>w.ci).join(",")+
+      '" data-sev="'+f.severity+'">'+
+      '<div class="tags">'+
+      '<span class="tag t-'+f.severity+'">'+f.severity+'</span>'+
+      '<span class="tag t-basis">'+({statutory:"the Act says this",
+        regulatory:"the regulator directs", policy:"benchmark, non-binding",
+        norm:"no law on point"}[f.basis]||f.basis)+
+      '</span>'+
+      // A finding whose facts were read off the clause by pattern is the same on
+      // every run. Everything else moves with what the model noticed. A reader
+      // who has seen the same contract come back differently twice needs to be
+      // told which kind they are looking at.
+      (f.from_text ? '<span class="tag t-fixed">read from the text</span>' : '')+
+      '</span></div><div class="msg">'+esc(f.message)+'</div>'+
+      (f.note ? '<div class="note">'+esc(f.note)+'</div>' : '')+
+      // Why this card has no passage of law under it. Three of the four tiers cite
+      // a written source and one does not, by design, and a reader who sees a
+      // statute on one finding and nothing on the next reasonably concludes the
+      // tool failed on the second. Saying it plainly is the alternative to
+      // inventing a citation, which is the one thing this project must never do.
+      // Why this card has no passage of law under it, said accurately.
+      //
+      // It used to read "it differs from what comparable agreements do", which is
+      // an empirical claim, and there is no corpus of comparable agreements behind
+      // it. Twenty-seven of the twenty-nine rules in this tier are hand-written
+      // judgements about one-sided drafting; the two that would genuinely need a
+      // measured corpus are switched off because that corpus does not exist. A
+      // reader who asked "compared against what, exactly?" deserved a better answer
+      // than the interface was giving them.
+      (f.basis === "norm"
+        ? '<div class="note">No statute or regulation settles this one, so there is '+
+          'no passage to show. It is flagged as a drafting judgement: the term is '+
+          'one-sided or leaves something important undefined. Reasonable people can '+
+          'disagree, so read the clause and decide for yourself.</div>'
+        : '')+
+      (f.from_text && f.evidence && f.evidence.length
+        ? '<div class="note">Matched in your document: '+
+          f.evidence.map(e=>'\u201c'+esc(e)+'\u201d').join(', ')+
+          '. This finding does not depend on the model, so it is the same every run.</div>'
+        : '')+
+      (f.citation_span ? '<details><summary>Show the law this rests on</summary>'+
+        '<div class="span">'+esc(f.citation_span)+'</div><div class="src">'+
+        esc(f.citation_source)+' · rule '+esc(f.rule_id)+
+        (f.verified?' · verified':'')+'</div></details>' : '')+
+      (f.where.length > 1
+        ? '<div class="note" style="margin-top:8px"><b>Found in '+f.where.length+
+          ' clauses:</b> '+f.where.map(w =>
+            '<a href="#" class="goto" data-ci="'+w.ci+'">'+
+            esc((w.heading||("clause "+w.ci)).trim().slice(0,48))+'</a>').join(" &middot; ")+
+          '</div>'
+        : '<span class="jump">&uarr; jump to this clause</span>')+
+    '</div>').join("");
+
+  $("finds").innerHTML += coverageNote(d);
+
+  if(okAll.length){
+    $("finds").innerHTML +=
+      '<div class="clean-note" style="margin-top:14px"><b>'+okAll.length+
+      ' other clause'+(okAll.length>1?'s':'')+' checked and found acceptable.</b><br>'+
+      okAll.map(f=>esc(f.message)).join('<br>')+'</div>';
+  }
+
+  wire(d);
+  // A negotiation message built on a partially read document would argue from
+  // findings that were never gathered, and it is the one artefact the user sends
+  // under their own name.
+  if(d.draft_allowed === false){
+    // The draft is the only thing here that leaves this tool under the reader's
+    // own name. A wrong finding on screen costs them a minute; a wrong demand
+    // sent to a landlord or a lender costs them their standing in the negotiation.
+    $("draft").innerHTML = '<div class="clean-note" style="border-left-color:var(--red)">'+
+      '<b>No draft for a document read as the wrong type.</b><br>'+
+      'A message asking for changes to clauses this document does not contain is '+
+      'worse than no message. Set the document type correctly and run it again.</div>';
+  } else if(unreadCount(d) > 0){
+    $("draft").innerHTML = '<div class="clean-note" style="border-left-color:var(--red)">'+
+      '<b>No draft while clauses are unchecked.</b><br>A negotiation message built on '+
+      'a document that was not fully read would argue from findings that do not exist '+
+      'yet.</div>';
+  } else {
+    // One entry per problem. With every occurrence sent, the draft listed the same
+    // complaint four times and quoted whichever clause happened to come first.
+    drawDraft(d.doc_type, issues, myRun, d.recorded_draft);
+  }
+}
+
+function clear(){
+  document.querySelectorAll(".cl.sel,.find.sel")
+    .forEach(x => x.classList.remove("sel"));
+}
+
+function applyFilter(mode){
+  document.querySelectorAll(".stat").forEach(t =>
+    t.classList.toggle("on", t.dataset.f === mode));
+
+  document.querySelectorAll(".cl").forEach(el => {
+    const sev = el.dataset.sev || "";
+    const skipped = el.dataset.skipped === "1";
+    let show = true;
+    if(mode === "high")    show = sev === "high";
+    else if(mode === "flagged") show = sev !== "";
+    else if(mode === "skipped") show = skipped;
+    el.classList.toggle("hide", !show);
+  });
+
+  document.querySelectorAll(".find").forEach(el => {
+    const sev = el.dataset.sev || "";
+    let show = true;
+    if(mode === "high") show = sev === "high";
+    else if(mode === "skipped") show = false;
+    el.classList.toggle("hide", !show);
+  });
+}
+
+function wire(d){
+  document.querySelectorAll(".stat").forEach(t =>
+    t.onclick = () => applyFilter(t.dataset.f));
+
+  // Clicking a clause highlights its findings, and clicking a finding scrolls to
+  // its clause. Without this the two columns are two lists that happen to sit
+  // side by side, and the reader has to match them up by eye.
+  document.querySelectorAll(".cl").forEach(el => el.onclick = () => {
+    clear();
+    el.classList.add("sel");
+    const i = el.dataset.i;
+    const as_hits = [...document.querySelectorAll('.find')].filter(f =>
+      (f.dataset.cis || f.dataset.ci || "").split(",").includes(String(i)));
+    as_hits.forEach(f => f.classList.add("sel"));
+    if(as_hits.length) as_hits[0].scrollIntoView({behavior:"smooth", block:"center"});
+  });
+
+  document.querySelectorAll(".find").forEach(el => {
+    // Opening the law is not a request to go somewhere. The summary sits inside the
+    // card, so its click bubbled up to the card handler and scrolled the page away
+    // from the text the reader had just asked to see.
+    el.querySelectorAll("details, summary, .span, .src").forEach(inner =>
+      inner.addEventListener("click", ev => ev.stopPropagation()));
+
+    // A card that covers several clauses lists them. Each link goes to its own
+    // clause rather than letting the click fall through to the first one.
+    el.querySelectorAll(".goto").forEach(a => a.addEventListener("click", ev => {
+      ev.preventDefault(); ev.stopPropagation();
+      clear(); el.classList.add("sel");
+      const t = $("cl-" + a.dataset.ci);
+      if(t){ t.classList.add("sel"); t.scrollIntoView({behavior:"smooth", block:"center"}); }
+    }));
+
+    el.onclick = () => {
+      clear();
+      el.classList.add("sel");
+      const t = $("cl-" + el.dataset.ci);
+      if(t){ t.classList.add("sel");
+             t.scrollIntoView({behavior:"smooth", block:"center"}); }
+    };
+  });
+}
+
+async function drawDraft(dt, findings, myRun, recorded){
+  // Without these two states, a draft still on its way and a draft that failed look
+  // the same: an empty space under the findings. The reader cannot tell whether to
+  // wait, and a failure nobody can see is a failure nobody reports.
+  $("draft").innerHTML = '<div class="draft"><h2>Negotiation draft</h2>'+
+    '<p class="note">Writing it now. This is a second request after the audit and can '+
+    'take up to a minute on a long document.</p></div>';
+  const failed = why => {
+    if(myRun !== undefined && myRun !== runId) return;
+    $("draft").innerHTML = '<div class="clean-note" style="border-left-color:var(--red)">'+
+      '<b>The draft could not be written this time.</b><br>The findings above are '+
+      'complete. Run the audit again for a draft, or write the message from the '+
+      'findings yourself.'+(why ? ' <span style="color:var(--muted)">('+esc(why)+
+      ')</span>' : '')+'</div>';
+  };
+  try{
+    let draft, note;
+    if(recorded){
+      // A recorded sample carries the draft written in the same live run.
+      ({draft, note} = recorded);
+    } else {
+      const res = await fetch(API+"/draft", {method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({doc_type: dt, findings})});
+      if(!res.ok){ failed("the server answered " + res.status); return; }
+      ({draft, note} = await res.json());
+    }
+    // The draft belongs to the document that asked for it, not to
+    // whatever is on screen when it finally arrives.
+    if(myRun !== undefined && myRun !== runId) return;
+    $("draft").innerHTML = '<div class="draft"><h2>Negotiation draft</h2>'+
+      '<p class="note" style="margin-bottom:11px">'+esc(note)+'</p>'+
+      '<textarea id="dtext">'+esc(draft)+'</textarea>'+
+      '<button class="go" id="copy" style="margin-top:12px">Copy to clipboard</button></div>';
+    $("copy").onclick = () => { navigator.clipboard.writeText($("dtext").value);
+      $("copy").textContent = "Copied"; setTimeout(()=>$("copy").textContent="Copy to clipboard",1600); };
+  }catch(e){ failed(e && e.message ? e.message : "no answer from the server"); }
+}
+</script>
+</body></html>

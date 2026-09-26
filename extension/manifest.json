@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "Clarity",
+  "version": "0.1.0",
+  "description": "Flags risky clauses in contracts and terms you are about to accept, with the law each flag rests on.",
+  "permissions": ["activeTab", "storage", "scripting"],
+  "host_permissions": ["http://localhost:8000/*"],
+  "background": { "service_worker": "worker.js" },
+  "action": { "default_popup": "popup.html", "default_title": "Clarity" },
+  "content_scripts": [{
+    "matches": ["<all_urls>"],
+    "js": ["content.js"],
+    "run_at": "document_idle"
+  }]
+}

@@ -1,0 +1,11 @@
+.git
+.env
+.prepush-deny
+.venv
+__pycache__
+*.pyc
+tests/real
+data/versions
+data/clauses/tmp*
+*.pdf
+*.docx

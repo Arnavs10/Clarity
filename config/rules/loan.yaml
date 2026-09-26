@@ -1,0 +1,215 @@
+# Loan agreement rules.
+#
+# Basis tiers as elsewhere, plus one that first appears here:
+#
+#   regulatory  a direction from a regulator, binding on the entities it regulates.
+#               The RBI penal charges circular binds banks and NBFCs from 1 January
+#               2024. That is neither an Act nor optional guidance, so it gets its
+#               own tier rather than being flattened into either.
+#
+# Verified 31 Aug 2026 against the circular text published on rbi.org.in. Rules that
+# could not be grounded were left as norm rather than dressed up as regulatory.
+
+version: 1
+doc_type: loan
+
+rules:
+  - id: R-LOAN-01
+    category: penal_charges
+    when: {penal_interest_added_to_rate: true}
+    basis: regulatory
+    source:
+      act: rbi_penal_charges_2023
+      provision: "penal charges not penal interest"
+      corpus_id: rbi_penal_2023
+    anchors: ["shall not be levied in the form of penal interest"]
+    severity: high
+    message: >-
+      Late payment is charged as penal interest added to the rate. The RBI requires
+      it to be a separate penal charge instead, from 1 January 2024.
+
+  - id: R-LOAN-02
+    category: penal_charges
+    when: {penal_charges_capitalised: true}
+    basis: regulatory
+    source:
+      act: rbi_penal_charges_2023
+      provision: "no capitalisation of penal charges"
+      corpus_id: rbi_penal_2023
+    anchors: ["no capitalisation of penal charges"]
+    severity: high
+    message: >-
+      Interest is computed on the penalty itself. The RBI bars capitalisation of
+      penal charges.
+
+  - id: R-LOAN-03
+    category: penal_charges
+    when: {individual_penal_higher_than_corporate: true}
+    basis: regulatory
+    source:
+      act: rbi_penal_charges_2023
+      provision: "individual borrowers penal charges"
+      corpus_id: rbi_penal_2023
+    anchors: ["shall not be higher than the penal charges applicable to non individual borrowers"]
+    severity: high
+    message: >-
+      An individual borrowing for a non-business purpose is charged more than a
+      company would be for the same default. The RBI bars that.
+
+  - id: R-LOAN-04
+    category: disclosure_and_kfs
+    # "never quantified" is a statement about the agreement, and this rule was
+    # deciding it from one clause. On a real loan agreement it fired on the
+    # auto-debit clause, which mentions reimbursing bank charges and names no
+    # figure, while clause 7 four clauses earlier set the late charge at 2% per
+    # month. The finding was wrong and it carried a correctly retrieved RBI passage
+    # while being wrong, which reads as checked rather than as mistaken.
+    #
+    # The clause-level trigger stays, so the finding still lands on a clause the
+    # reader can open. The document-level test decides whether the claim is true.
+    # Both branches are needed: an agreement can quantify a late charge in one
+    # clause and reserve the penal charge to its own discretion in the next, and
+    # only the second is the disclosure failure the circular addresses.
+    when:
+      all:
+        - {penal_charge_amount_undisclosed: true}
+        - any:
+            - {doc__penal_charge_quantified: false}
+            - {doc__penal_quantum_withheld: true}
+    basis: regulatory
+    source:
+      act: rbi_penal_charges_2023
+      provision: "disclosure in loan agreement and Key Fact Statement"
+      corpus_id: rbi_penal_2023
+    anchors: ["quantum and reason for penal charges shall be clearly disclosed"]
+    severity: medium
+    message: >-
+      Penal charges are referred to but never quantified. The RBI requires the amount
+      and the reason to appear in the agreement and the Key Fact Statement.
+
+  - id: R-LOAN-05
+    category: default_and_acceleration
+    # A named sum on default is not by itself the mischief section 74 addresses. The
+    # RBI circular expressly contemplates a penal charge as a separate, disclosed fee,
+    # so a modest late fee stated in the Key Fact Statement is a lawful term, and
+    # flagging it high-severity statutory turned a fair loan agreement into a warning.
+    # Section 74 bites when the sum is penal in character rather than compensatory.
+    when:
+      all:
+        - {stipulated_penalty_amount: true}
+        - any:
+            - {penalty_disproportionate_to_loss: true}
+            - {penal_charge_amount_undisclosed: true}
+    basis: statutory
+    source: {act: indian_contract_act_1872, section: "74", corpus_id: ica_1872}
+    anchors: ["reasonable compensation"]
+    severity: high
+    message: >-
+      A fixed sum is named as payable on breach, and it is either undisclosed in
+      advance or out of proportion to the loss. Section 74 allows only reasonable
+      compensation, not a penalty, whatever figure the contract names.
+
+  - id: R-LOAN-06
+    category: default_and_acceleration
+    when: {acceleration_without_notice: true}
+    basis: norm
+    metric: cure_period_days
+    severity: high
+    # High on the norm tier has to name the condition that makes the case severe, because there is no statute or regulator behind the number.
+    # Here the trigger is that condition: the rule only fires on the adverse form.
+    escalate_to_high_when: {acceleration_without_notice: true}
+    message: >-
+      The entire balance can be called in with no notice and no chance to cure.
+
+  - id: R-LOAN-07
+    category: interest_rate
+    when: {rate_reset_at_sole_discretion: true}
+    basis: norm
+    metric: rate_reset_basis
+    severity: high
+    # High on the norm tier has to name the condition that makes the case severe, because there is no statute or regulator behind the number.
+    # Here the trigger is that condition: the rule only fires on the adverse form.
+    escalate_to_high_when: {rate_reset_at_sole_discretion: true}
+    message: >-
+      The rate can be changed at the lender's discretion with no stated benchmark.
+
+  - id: R-LOAN-08
+    category: set_off_and_lien
+    when: {set_off_across_unrelated_accounts: true}
+    basis: norm
+    metric: set_off_scope
+    # Graded down from high on 17 September 2026, against a real loan agreement.
+    #
+    # It fired on a set-off clause limited to matured amounts, limited by applicable
+    # law, and requiring notice before it is exercised. That is close to the mildest
+    # form this clause takes, and it was reported above a five percent prepayment fee
+    # that costs real money. The message also dropped all three qualifiers, so the
+    # reader was told money could be taken and not told they would be warned first.
+    #
+    # Set-off without notice is the severe form, so that is what escalates.
+    severity: medium
+    escalate_to_high_when: {set_off_without_notice: true}
+    message: >-
+      Money in your other accounts with this lender can be applied to this loan.
+      Check whether notice is required first and whether it is limited to amounts
+      already due.
+
+  - id: R-LOAN-09
+    category: guarantor_obligations
+    when: {guarantee_uncapped: true}
+    basis: norm
+    metric: guarantee_cap
+    severity: high
+    # High on the norm tier has to name the condition that makes the case severe, because there is no statute or regulator behind the number.
+    # Here the trigger is that condition: the rule only fires on the adverse form.
+    escalate_to_high_when: {guarantee_uncapped: true}
+    message: >-
+      A personal guarantee with no ceiling and no end date.
+
+  - id: R-LOAN-10
+    category: prepayment_and_foreclosure
+    when: {prepayment_penalty: true}
+    basis: norm
+    metric: prepayment_penalty_percent
+    severity: medium
+    message: >-
+      Repaying early costs extra.
+
+  - id: R-LOAN-11
+    category: insurance_bundling
+    when: {insurance_mandatory_named_insurer: true}
+    basis: norm
+    metric: insurance_bundled
+    severity: medium
+    message: >-
+      Insurance is required from a named provider rather than one of your choosing.
+
+  - id: R-LOAN-12
+    category: assignment_and_securitisation
+    when: {assignment_without_notice: true}
+    basis: norm
+    metric: assignment_notice
+    severity: medium
+    message: >-
+      The loan can be sold on to someone else without telling you.
+
+  - id: R-LOAN-13
+    category: recovery_and_repossession
+    when: {repossession_without_notice: true}
+    basis: norm
+    metric: repossession_notice
+    severity: high
+    # High on the norm tier has to name the condition that makes the case severe, because there is no statute or regulator behind the number.
+    # Here the trigger is that condition: the rule only fires on the adverse form.
+    escalate_to_high_when: {repossession_without_notice: true}
+    message: >-
+      Security can be repossessed with no prior notice.
+
+  - id: R-LOAN-14
+    category: dispute_resolution
+    when: {jurisdiction_lender_city_only: true}
+    basis: norm
+    metric: jurisdiction_locality
+    severity: medium
+    message: >-
+      Disputes are heard only where the lender is, whatever it costs you to get there.

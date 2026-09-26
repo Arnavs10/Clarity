@@ -1,0 +1,28 @@
+{
+ "samples": [
+  {
+   "doc_type": "rental",
+   "label": "Rent agreement",
+   "file": "rental.json",
+   "version": "v37.7",
+   "recorded_on": "26 September 2026",
+   "commit": null
+  },
+  {
+   "doc_type": "loan",
+   "label": "Loan agreement",
+   "file": "loan.json",
+   "version": "v37.7",
+   "recorded_on": "26 September 2026",
+   "commit": null
+  },
+  {
+   "doc_type": "employment",
+   "label": "Offer letter",
+   "file": "employment.json",
+   "version": "v37.7",
+   "recorded_on": "26 September 2026",
+   "commit": null
+  }
+ ]
+}

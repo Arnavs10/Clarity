@@ -1,0 +1,240 @@
+# Rental rules.
+#
+# Basis tiers as in employment.yaml. The Model Tenancy Act 2021 sits in the policy
+# tier rather than the statutory tier: it is a model law that binds only where a
+# state has adopted it, and most states have not. Findings that rest on it say
+# "below the national policy benchmark", never "illegal".
+#
+# Verified 22 Aug 2026 against PRS Legislative Research analysis of the Act. Two
+# rules from the first draft were deleted outright because the Act does not say
+# what they claimed: there is no fixed deposit refund window, and there is no
+# 24 hour entry notice requirement.
+
+version: 1
+doc_type: rental
+
+rules:
+  - id: R-RENT-01
+    category: security_deposit
+    # Fires when the premises are residential or the document does not say. Real rent
+    # agreements for a home rarely use the word "residential" anywhere, so requiring
+    # it to be stated left the single most useful rental rule silent on most genuine
+    # documents. A lease that says it is commercial is still excluded.
+    #
+    # Read from the page as well as by the model. The deposit usually sits in the
+    # key-terms table, and a model reading that long opening block caught a deposit
+    # of three months' rent on one run and missed it on the next. Reported once,
+    # because a document fact is true of every clause.
+    scope: document
+    when:
+      all:
+        - any:
+            - {deposit_months: {gt: 2}}
+            - {doc__deposit_months: {gt: 2}}
+        - any:
+            - {premises_type: residential}
+            - {premises_type: {absent: true}}
+    basis: policy
+    source: {act: model_tenancy_act_2021, section: "11", corpus_id: mta_2021}
+    anchors: ["security deposit", "two months"]
+    severity: high
+    message: >-
+      Deposit exceeds two months rent. The Model Tenancy Act 2021 caps a residential
+      deposit at two months.
+    note: Model law, binding only in states that have adopted it.
+
+  - id: R-RENT-02
+    category: security_deposit
+    when: {deposit_months: {gt: 6}, premises_type: non_residential}
+    basis: policy
+    source: {act: model_tenancy_act_2021, section: "11", corpus_id: mta_2021}
+    anchors: ["security deposit", "two months"]
+    severity: high
+    message: >-
+      Deposit exceeds six months rent, the Model Tenancy Act ceiling for
+      non-residential premises.
+
+  - id: R-RENT-03
+    category: security_deposit
+    when: {forfeiture_at_sole_discretion: true}
+    basis: norm
+    metric: forfeiture_discretion
+    severity: high
+    # High on the norm tier has to name the condition that makes the case severe, because there is no statute or regulator behind the number.
+    # Here the trigger is that condition: the rule only fires on the adverse form.
+    escalate_to_high_when: {forfeiture_at_sole_discretion: true}
+    message: >-
+      Deposit may be withheld at the landlord's sole discretion, with no stated
+      grounds and no itemisation.
+
+  - id: R-RENT-04
+    category: lock_in_period
+    when: {lock_in_binds_tenant_only: true}
+    basis: norm
+    metric: lock_in_symmetry
+    # Graded down from high on 17 September 2026, against a real rent agreement.
+    #
+    # It fired on a six month commitment with sixty days notice where leaving early
+    # cost the lower of two months rent or the landlord's documented loss, capped and
+    # subject to applicable law. That is an ordinary Indian residential term, and
+    # calling it high put it above a clause that could cost the tenant the whole
+    # deposit. It also claimed an asymmetry the document did not contain: the
+    # landlord had no early exit either, only termination for breach after a cure
+    # notice, which is a restriction on the landlord rather than a freedom.
+    #
+    # What makes a one-sided lock-in severe is what leaving costs, so that is the
+    # escalation, and the message now reports what was observed rather than an
+    # imbalance inferred from silence.
+    severity: medium
+    escalate_to_high_when: {early_exit_forfeits_full_deposit: true}
+    message: >-
+      This clause commits the tenant to a minimum period without committing the
+      landlord to the same one. Check what leaving early would cost you, and when the
+      rest of the agreement lets the landlord end it.
+
+  - id: R-RENT-05
+    category: lock_in_period
+    when: {early_exit_forfeits_full_deposit: true}
+    basis: statutory
+    source: {act: indian_contract_act_1872, section: "74", corpus_id: ica_1872}
+    anchors: ["reasonable compensation not exceeding"]
+    severity: high
+    message: >-
+      Leaving early forfeits the entire deposit regardless of actual loss. Section 74
+      allows only reasonable compensation, not a penalty.
+
+  - id: R-RENT-06
+    category: notice_period
+    when: {notice_asymmetric: true}
+    basis: norm
+    metric: notice_days_tenant_vs_landlord
+    severity: high
+    # High on the norm tier has to name the condition that makes the case severe, because there is no statute or regulator behind the number.
+    # Here the trigger is that condition: the rule only fires on the adverse form.
+    escalate_to_high_when: {notice_asymmetric: true}
+    message: >-
+      Notice is unequal between the two sides.
+
+  - id: R-RENT-07
+    category: entry_and_inspection
+    # Section 17 requires at least 24 hours written or electronic notice before the
+    # landlord enters. An earlier version of this rule carried a note saying the Act
+    # sets no notice period, which is the opposite of what section 17 says, and it
+    # disclaimed the strongest finding in the rule set. The note was written against
+    # a summary of the Act rather than the Act.
+    when:
+      any:
+        - {entry_without_notice: true}
+        - {entry_notice_hours: {lt: 24}}
+        - {entry_causes_unspecified: true}
+    basis: policy
+    source: {act: model_tenancy_act_2021, section: "17", corpus_id: mta_2021}
+    anchors: ["twenty-four hours", "entry"]
+    severity: high
+    message: >-
+      Landlord entry without adequate notice. Section 17 of the Model Tenancy Act
+      requires at least twenty-four hours written notice before entering, and the
+      agreement is expected to state the reasonable causes for entry.
+    note: Model law, binding only in states that have adopted it.
+
+  - id: R-RENT-08
+    category: rent_and_escalation
+    when: {escalation_percent: {gt_percentile: 90}}
+    basis: norm
+    metric: escalation_percent
+    severity: medium
+    message: >-
+      Rent escalation is steep. Ask what it is tied to and whether it is capped.
+
+  - id: R-RENT-09
+    category: rent_and_escalation
+    when: {escalation_undefined: true}
+    basis: norm
+    metric: escalation_defined
+    severity: medium
+    message: >-
+      Rent may be revised with no stated formula or ceiling.
+
+  - id: R-RENT-10
+    category: registration_and_stamp_duty
+    # `registered: false` could never fire on the documents this rule exists for.
+    # A lease with no registration clause produces no `registered` field at all, the
+    # engine sees None, and the comparison fails. Silence about registration is a
+    # fact about the agreement, and no single clause can report it, so the document
+    # scanner reads it once over the whole text. scope: document keeps the finding
+    # from repeating on every clause, since both halves are now document-wide.
+    scope: document
+    when:
+      all:
+        - any:
+            # "for any term exceeding one year", in the passage this rule cites. A
+            # lease of exactly twelve months does not exceed one year, and the
+            # finding said "twelve months or more" over a quotation that says otherwise.
+            - {term_months: {gt: 12}}
+            - {doc__term_months: {gt: 12}}
+        - {doc__registration_mentioned: false}
+    basis: statutory
+    source: {act: registration_act_1908, section: "17", corpus_id: reg_1908}
+    anchors: ["leases of immovable property from year to year", "for any term exceeding one year"]
+    severity: medium
+    message: >-
+      A lease for more than one year must be registered under section 17. An
+      unregistered lease of that length may not be admissible as evidence of its
+      terms.
+
+  - id: R-RENT-11
+    category: maintenance_and_repairs
+    when: {structural_repairs_on_tenant: true}
+    basis: policy
+    source: {act: model_tenancy_act_2021, corpus_id: mta_2021,
+             query: "landlord responsible structural repairs whitewashing plumbing"}
+    anchors: ["structural repairs"]
+    severity: medium
+    message: >-
+      Structural repairs pushed onto the tenant. The Model Tenancy Act places
+      structural upkeep on the landlord.
+
+  - id: R-RENT-12
+    category: termination_and_eviction
+    when: {termination_without_cure_period: true}
+    basis: norm
+    metric: cure_period_days
+    severity: medium
+    message: >-
+      Termination with no opportunity to fix the breach first.
+
+  - id: R-RENT-13
+    category: renewal_terms
+    when: {auto_renews_on_landlord_terms: true}
+    basis: norm
+    metric: renewal_control
+    severity: medium
+    message: >-
+      Renews automatically on terms the landlord sets, with no tenant opt-out.
+
+  - id: R-RENT-14
+    category: dispute_resolution
+    when: {jurisdiction_away_from_premises: true}
+    basis: norm
+    metric: jurisdiction_locality
+    severity: medium
+    message: >-
+      Disputes are heard somewhere other than where the property is.
+
+  - id: R-RENT-15
+    category: security_deposit
+    # Clause 8 of the harsh rental fixture forfeits the entire deposit on any breach,
+    # "howsoever minor", and no rule covered it. Forfeiture of a deposit by way of
+    # penalty falls under section 74: a court awards reasonable compensation, capped
+    # at the amount forfeitable, rather than the whole sum automatically.
+    when:
+      any:
+        - {deposit_forfeited_entirely_on_any_breach: true}
+        - {forfeiture_disproportionate_to_breach: true}
+    basis: statutory
+    source: {act: indian_contract_act_1872, section: "74", corpus_id: ica_1872}
+    anchors: ["reasonable compensation"]
+    severity: high
+    message: >-
+      The whole deposit is forfeited on any breach, however small. Section 74 allows
+      only reasonable compensation for a breach, whatever sum the contract names.

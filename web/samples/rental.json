@@ -1,0 +1,271 @@
+{
+ "audit": {
+  "doc_type": "rental",
+  "clauses": 8,
+  "flagged": 7,
+  "skipped_by_triage": 0,
+  "high": 5,
+  "results": [
+   {
+    "index": 0,
+    "heading": "1. TERM",
+    "text": "1. TERM\nThis agreement is for a period of twenty-four (24) months commencing on the first day of October. The parties agree that this agreement shall not be registered and shall be executed on plain paper.",
+    "triage_keep": true,
+    "extraction_failed": false,
+    "findings": [
+     {
+      "heading": null,
+      "clause_text": null,
+      "rule_id": "R-RENT-01",
+      "category": "security_deposit",
+      "basis": "policy",
+      "source": {
+       "act": "model_tenancy_act_2021",
+       "section": "11",
+       "corpus_id": "mta_2021"
+      },
+      "from_text": false,
+      "evidence": null,
+      "severity": "high",
+      "risky": true,
+      "message": "Deposit exceeds two months rent. The Model Tenancy Act 2021 caps a residential deposit at two months.",
+      "note": "Model law, binding only in states that have adopted it.",
+      "citation_source": "model_tenancy_act_2021",
+      "citation_span": "11. (1) The security deposit to be paid by the tenant in advance shall be such as may be agreed upon between the landlord and the tenant in the tenancy agreement, which shall –– Page 8 of 28 (a) not exceed two months rent, in case of residential premises; and (b) not exceed six months rent, in case of non-residential premises. (2) The security deposit shall be refunded to the tenant on the date of taking over vacant possession of the premises from the tenant, after making due deduction of any liability of the tenant. CHAPTER IV RIGHTS AND OBLIGATIONS OF LANDLORD AND TENANT",
+      "verified": true
+     },
+     {
+      "heading": null,
+      "clause_text": null,
+      "rule_id": "R-RENT-10",
+      "category": "registration_and_stamp_duty",
+      "basis": "statutory",
+      "source": {
+       "act": "registration_act_1908",
+       "section": "17",
+       "corpus_id": "reg_1908"
+      },
+      "from_text": false,
+      "evidence": null,
+      "severity": "medium",
+      "risky": true,
+      "message": "A lease for more than one year must be registered under section 17. An unregistered lease of that length may not be admissible as evidence of its terms.",
+      "note": null,
+      "citation_source": "registration_act_1908",
+      "citation_span": "17. Documents of which registration is compaulsory.—(1) The following documents shall be registered, if the property to which they relate is sitiuate in a district in which, and if they have been d executed on or after the date on which, Act No. XVI of 1864, or the Indian Registration Act, 1866, or the n Indian Registration Act, 1871, or the Indian Registration Act, 1877, or this Act came or comes into force, I namely:— (a) instruments of gift of immovable property; (b) other non-testamentary instruments which purport or operate to create, declare, assign, limit or extinguish, whether in present or in future, any right, title or interest, whether vested or contingent, of the value of one hundred rupees and upwards, to or in immovable property; (c) non-testamentary instruments which acknowledge the receipt or payment of any consideration on account of the creation, declaration, assignment, limitation or extinction of any such right, title or interest; and (d) leases of immovable property from year to year, or for any term exceeding one year, or reserving a yearly rent; 3[(e) non-testamentary instruments transferring or assigning any decree or order of a Court or any award when such decree or order or award purports or operates to create, declare, assign, limit or extinguish, whether in present or in future, any right, title or interest, whether vested or contingent, of the value of one hundred rupees and upwards, to or in immovable property:] Provided that the 4[State Government] may, by order published in the 5[Official Gazette], exempt from the operation of this sub-section any lease executed in any district, or part of a district, the terms granted by which do not exceed five years and the annual rents reserved by which do not exceed fifty rupees.",
+      "verified": true
+     }
+    ],
+    "reassurances": []
+   },
+   {
+    "index": 1,
+    "heading": "2. SECURITY DEPOSIT",
+    "text": "2. SECURITY DEPOSIT\nThe Lessee shall pay a refundable security deposit of six (6) months rent. The deposit shall be refunded subject to deductions at the sole discretion of the Lessor, and the Lessor shall not be required to furnish any account of such deductions.",
+    "triage_keep": true,
+    "extraction_failed": false,
+    "findings": [
+     {
+      "heading": null,
+      "clause_text": null,
+      "rule_id": "R-RENT-03",
+      "category": "security_deposit",
+      "basis": "norm",
+      "source": null,
+      "from_text": false,
+      "evidence": null,
+      "severity": "high",
+      "risky": true,
+      "message": "Deposit may be withheld at the landlord's sole discretion, with no stated grounds and no itemisation.",
+      "note": null,
+      "citation_source": null,
+      "citation_span": null,
+      "verified": true
+     }
+    ],
+    "reassurances": []
+   },
+   {
+    "index": 2,
+    "heading": "3. RENT AND ESCALATION",
+    "text": "3. RENT AND ESCALATION\nThe rent shall be increased by twenty-five percent (25%) at the end of every twelve months of the term.",
+    "triage_keep": true,
+    "extraction_failed": false,
+    "findings": [],
+    "reassurances": []
+   },
+   {
+    "index": 3,
+    "heading": "4. LOCK-IN",
+    "text": "4. LOCK-IN\nThe Lessee shall not vacate the premises before the expiry of eighteen months. The Lessor may terminate this agreement at any time by giving fifteen days notice.",
+    "triage_keep": true,
+    "extraction_failed": false,
+    "findings": [
+     {
+      "heading": null,
+      "clause_text": null,
+      "rule_id": "R-RENT-04",
+      "category": "lock_in_period",
+      "basis": "norm",
+      "source": null,
+      "from_text": false,
+      "evidence": null,
+      "severity": "medium",
+      "risky": true,
+      "message": "This clause commits the tenant to a minimum period without committing the landlord to the same one. Check what leaving early would cost you, and when the rest of the agreement lets the landlord end it.",
+      "note": null,
+      "citation_source": null,
+      "citation_span": null,
+      "verified": true
+     }
+    ],
+    "reassurances": []
+   },
+   {
+    "index": 4,
+    "heading": "5. NOTICE TO VACATE",
+    "text": "5. NOTICE TO VACATE\nThe Lessee shall give three (3) months written notice before vacating. The Lessor may require the Lessee to vacate on fifteen (15) days notice.",
+    "triage_keep": true,
+    "extraction_failed": false,
+    "findings": [
+     {
+      "heading": null,
+      "clause_text": null,
+      "rule_id": "R-RENT-06",
+      "category": "notice_period",
+      "basis": "norm",
+      "source": null,
+      "from_text": false,
+      "evidence": null,
+      "severity": "high",
+      "risky": true,
+      "message": "Notice is unequal between the two sides.",
+      "note": null,
+      "citation_source": null,
+      "citation_span": null,
+      "verified": true
+     }
+    ],
+    "reassurances": []
+   },
+   {
+    "index": 5,
+    "heading": "6. ENTRY",
+    "text": "6. ENTRY\nThe Lessor or his agents may enter the premises at any time without prior notice to the Lessee for any purpose the Lessor considers necessary.",
+    "triage_keep": true,
+    "extraction_failed": false,
+    "findings": [
+     {
+      "heading": null,
+      "clause_text": null,
+      "rule_id": "R-RENT-07",
+      "category": "entry_and_inspection",
+      "basis": "policy",
+      "source": {
+       "act": "model_tenancy_act_2021",
+       "section": "17",
+       "corpus_id": "mta_2021"
+      },
+      "from_text": false,
+      "evidence": null,
+      "severity": "high",
+      "risky": true,
+      "message": "Landlord entry without adequate notice. Section 17 of the Model Tenancy Act requires at least twenty-four hours written notice before entering, and the agreement is expected to state the reasonable causes for entry.",
+      "note": "Model law, binding only in states that have adopted it.",
+      "citation_source": "model_tenancy_act_2021",
+      "citation_span": "17. (1) Every landlord or the property manager may enter the Entry into premises let out on rent after serving a notice, in writing or through premises. electronic mode, to the tenant at least twenty four hours before the time of entry under the following circumstances, namely:–– (a) to carry out repairs or replacement or to do or to get work done in the premises; or (b) to carry out an inspection of the premises for the purpose of determining whether the premises are in a habitable state; or (c) for any other reasonable cause for entry specified in the tenancy agreement. (2) The notice referred to in sub-section (1) shall specify the day, time and reason for entry: Provided that no person shall enter the premises before sun rise and after sun set. Provided further that nothing contained in this section shall prevent the landlord from entering into the premises let out on rent without pr",
+      "verified": true
+     }
+    ],
+    "reassurances": []
+   },
+   {
+    "index": 6,
+    "heading": "7. REPAIRS",
+    "text": "7. REPAIRS\nAll repairs to the premises, including structural repairs and repairs to the roof, walls and plumbing, shall be carried out by the Lessee at the Lessee's own cost.",
+    "triage_keep": true,
+    "extraction_failed": false,
+    "findings": [
+     {
+      "heading": null,
+      "clause_text": null,
+      "rule_id": "R-RENT-11",
+      "category": "maintenance_and_repairs",
+      "basis": "policy",
+      "source": {
+       "act": "model_tenancy_act_2021",
+       "corpus_id": "mta_2021",
+       "query": "landlord responsible structural repairs whitewashing plumbing"
+      },
+      "from_text": false,
+      "evidence": null,
+      "severity": "medium",
+      "risky": true,
+      "message": "Structural repairs pushed onto the tenant. The Model Tenancy Act places structural upkeep on the landlord.",
+      "note": null,
+      "citation_source": "model_tenancy_act_2021",
+      "citation_span": "Structural repairs except those necessitated by damage caused by the tenant. 2. Whitewashing of walls and painting of doors and windows. 3.",
+      "verified": true
+     }
+    ],
+    "reassurances": []
+   },
+   {
+    "index": 7,
+    "heading": "8. FORFEITURE",
+    "text": "8. FORFEITURE\nOn any breach by the Lessee, howsoever minor, the entire security deposit shall stand forfeited.",
+    "triage_keep": true,
+    "extraction_failed": false,
+    "findings": [
+     {
+      "heading": null,
+      "clause_text": null,
+      "rule_id": "R-RENT-15",
+      "category": "security_deposit",
+      "basis": "statutory",
+      "source": {
+       "act": "indian_contract_act_1872",
+       "section": "74",
+       "corpus_id": "ica_1872"
+      },
+      "from_text": false,
+      "evidence": null,
+      "severity": "high",
+      "risky": true,
+      "message": "The whole deposit is forfeited on any breach, however small. Section 74 allows only reasonable compensation for a breach, whatever sum the contract names.",
+      "note": null,
+      "citation_source": "indian_contract_act_1872",
+      "citation_span": "74. Compensation for breach of contract where penalty stipulated for.—1[When a contract has been broken, if a sum is named in the contract as the amount to be paid in case of such breach, or if the contract contains any other stipulation by way of penalty, the party complaining of the breach is entitled, whether or not actual damage or loss is proved to have been caused thereby, to receive from the party who has broken the contract reasonable compensation not exceeding the amount so named or, as the case may be, the penalty stipulated for. Explanation.—A stipulation for increased interest from the date of default may be a stipulation by way of penalty.] Exception.—When any person enters into any bail-bond, recognizance or other instrument of the same nature, or, under the provisions of any law, or under the orders of the 2[Central Government] or of any 3[State Government], gives any bond",
+      "verified": true
+     }
+    ],
+    "reassurances": []
+   }
+  ],
+  "extraction_available": true,
+  "checks": [
+   "dispute resolution",
+   "entry and inspection",
+   "lock in period",
+   "maintenance and repairs",
+   "notice period",
+   "registration and stamp duty",
+   "renewal terms",
+   "rent and escalation",
+   "security deposit",
+   "termination and eviction"
+  ],
+  "unread": 0,
+  "type_status": "ok",
+  "type_suggested": null,
+  "type_message": null,
+  "draft_allowed": true,
+  "warning": null,
+  "disclaimer": "Flags for review, not legal advice."
+ },
+ "draft": {
+  "draft": "I am writing to request the following changes to the lease agreement.\n\nThe deposit amount exceeds the two‑month rent limit. Section 11 of the Model Tenancy Act, 2021 sets the benchmark here. It is a model law, binding only in states that have adopted it.\n\nThe lease term is longer than one year but the agreement is not registered. Section 17 of the Registration Act, 1908 speaks directly to this.\n\nThe security‑deposit clause states: “The deposit shall be refunded subject to deductions at the sole discretion of the Lessor, and the Lessor shall not be required to furnish any account of such deductions.” Please revise it to require itemised deductions and a reasonable basis for any withholding.\n\nThe tenancy term clause reads: “The Lessee shall not vacate the premises before the expiry of eighteen months. The Lessor may terminate this agreement at any time by giving fifteen days notice.” I request that the landlord’s right to terminate be subject to the same notice period as the tenant’s.\n\nThe notice clause states: “The Lessee shall give three (3) months written notice before vacating. The Lessor may require the Lessee to vacate on fifteen (15) days notice.” Please make the notice periods equal for both parties.\n\nThe entry clause says: “The Lessor or his agents may enter the premises at any time without prior notice to the Lessee for any purpose the Lessor considers necessary.” Section 17 of the Model Tenancy Act, 2021 sets the benchmark here. It is a model law, binding only in states that have adopted it. I ask that entry be permitted only with at least twenty‑four hours written notice and for reasonable causes.\n\nThe repair clause reads: “All repairs to the premises, including structural repairs and repairs to the roof, walls and plumbing, shall be carried out by the Lessee at the Lessee's own cost.” The model tenancy act, 2021 sets the benchmark here, though as a model law it binds only in states that have adopted it. Please shift responsibility for structural repairs to the landlord.\n\nThe forfeiture clause states: “On any breach by the Lessee, howsoever minor, the entire security deposit shall stand forfeited.” Section 74 of the Indian Contract Act, 1872 speaks directly to this. I request that forfeiture be limited to reasonable compensation for actual loss.",
+  "written_by": "model",
+  "note": "Read it, edit it, send it yourself. Nothing is sent for you."
+ }
+}

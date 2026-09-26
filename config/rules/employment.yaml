@@ -1,0 +1,289 @@
+# Employment rules.
+#
+# Every rule carries a basis tier saying where its authority comes from. Nothing
+# here rests on an unsourced claim.
+#
+#   statutory  the Act says it. Verifiable in data/corpus/, cited as a span.
+#   policy     official but non-binding guidance. Rendered as "below benchmark",
+#              never as "illegal".
+#   norm       no law governs it. The threshold is a percentile computed from the
+#              user's own contract corpus by tools/compute_norms.py, so the number
+#              is a measured fact rather than anyone's opinion.
+#
+# Verified 22 Aug 2026. A rule that could not be grounded was dropped, not guessed.
+
+version: 1
+doc_type: employment
+
+rules:
+  - id: R-EMP-01
+    category: non_compete
+    # Two conditions, not one. On a single boolean the whole decision sat with the
+    # model, and it fired on an internship clause whose only surviving obligation was
+    # confidentiality: no restraint on working, nothing for section 27 to void. The
+    # second condition asks the model to name the activity being restrained, so a
+    # clause that restrains nothing cannot satisfy it.
+    when:
+      all:
+        - {post_termination_restraint: true}
+        - {restricted_from_competing_or_soliciting: true}
+    basis: statutory
+    source: {act: indian_contract_act_1872, section: "27", corpus_id: ica_1872}
+    anchors: ["restrained from exercising a lawful profession"]
+    severity: medium
+    escalate_to_high_when:
+      any: [{bond_present: true}, {garden_leave_days: {gt: 60}}]
+    message: >-
+      Post-termination restraint on where you may work. Section 27 voids agreements
+      in restraint of trade to that extent.
+    note: >-
+      Indian courts do not weigh duration or geography the way US and UK courts do,
+      so a short restraint is not meaningfully safer than a long one. The narrow
+      exception is a covenant that only protects confidential information.
+
+  - id: R-EMP-02
+    category: non_compete
+    when: {in_term_restraint_only: true}
+    basis: statutory
+    source: {act: indian_contract_act_1872, section: "27", corpus_id: ica_1872}
+    anchors: ["restrained from exercising a lawful profession"]
+    severity: none
+    risky: false
+    message: >-
+      Restriction applies only during employment, which is generally enforceable.
+
+  - id: R-EMP-03
+    category: employment_bond
+    # A commitment plus a monetary consequence. Widening this to fire on the bare
+    # commitment caught a bond phrased without a figure, but it also fired on a real
+    # letter whose only term was "the minimum period of service is three months",
+    # which names no sum, no damages and no recovery. Section 74 speaks to a
+    # stipulated penalty, so with no money in the clause there is nothing for it to
+    # bite on and the statutory badge was simply wrong.
+    when:
+      all:
+        - {bond_present: true}
+        - any:
+            - {penalty_amount_stated: true}
+            - {liquidated_damages_stated: true}
+            - {recovery_on_early_exit: true}
+            - {training_cost_clawback: true}
+    basis: statutory
+    source: {act: indian_contract_act_1872, section: "74", corpus_id: ica_1872}
+    anchors: ["reasonable compensation"]
+    severity: high
+    message: >-
+      A minimum service commitment backed by money. Section 74 allows only reasonable
+      compensation for breach, whatever figure the contract names.
+
+  - id: R-EMP-04
+    category: employment_bond
+    when: {compels_continued_service: true}
+    basis: statutory
+    source: {act: specific_relief_act_1963, section: "14", corpus_id: sra_1963}
+    anchors: ["specifically enforced"]
+    # Medium, not high. Section 14 means no court will order you to keep working,
+    # so the clause cannot cost you your freedom. It was sitting at high next to a
+    # ten lakh recovery clause, which told a reader the two were equally serious.
+    # A bond with money attached is R-EMP-03 and stays high.
+    severity: medium
+    message: >-
+      Purports to compel continued service. Section 14 bars specific performance of
+      a personal service contract, so this cannot be enforced by making you work.
+
+  - id: R-EMP-05
+    category: ip_assignment
+    when:
+      all:
+        - {assigns_ip: true}
+        - any: [{covers_outside_work_hours: true}, {covers_off_premises: true}]
+    basis: statutory
+    source: {act: copyright_act_1957, section: "19", corpus_id: copyright_1957}
+    anchors: ["assignment of the copyright shall be valid unless it is in writing"]
+    severity: high
+    message: >-
+      Assigns work created outside working hours or off premises. Anything you build
+      on your own time may vest with the employer.
+
+  - id: R-EMP-06
+    category: ip_assignment
+    # Silence about prior work only matters when the assignment is wide enough to
+    # reach it. An assignment scoped to work created "in the course of the
+    # internship" does not sweep in projects built before joining, so firing on it
+    # was a false positive, and since most Indian letters say nothing about prior
+    # work it was about to fire on nearly all of them.
+    #
+    # Re-tiered to norm. Section 19 governs how an assignment is made and says
+    # nothing about carve-outs, so this never had a statutory basis to stand on.
+    when:
+      all:
+        - {assigns_ip: true}
+        - any:
+            - {covers_outside_work_hours: true}
+            - {covers_off_premises: true}
+            - {assignment_scope_unlimited: true}
+            - {covers_anything_related_to_business: true}
+        - any:
+            - {prior_work_carveout: false}
+            - {prior_work_carveout: {absent: true}}
+    basis: norm
+    metric: prior_work_carveout_present
+    severity: medium
+    message: >-
+      Broad IP assignment with no carve-out for work you already owned. Many letters
+      list excluded prior projects, and asking for one is reasonable.
+
+  - id: R-EMP-07
+    category: ip_assignment
+    when: {assigns_moral_rights: true}
+    basis: statutory
+    source: {act: copyright_act_1957, section: "57", corpus_id: copyright_1957}
+    anchors: ["right to claim authorship of the work"]
+    severity: medium
+    message: >-
+      Purports to assign moral rights. Section 57 keeps moral rights with the author
+      regardless of what the contract says.
+
+  - id: R-EMP-08
+    category: notice_period
+    when: {notice_asymmetric: true}
+    basis: norm
+    metric: notice_days_employee_vs_employer
+    severity: medium
+    message: >-
+      Notice is unequal between the two sides.
+
+  - id: R-EMP-09
+    category: notice_period
+    when: {notice_days_employee: {gt_percentile: 90}}
+    basis: norm
+    metric: notice_days_employee
+    severity: low
+    message: >-
+      Employee notice period is longer than most comparable contracts.
+
+  - id: R-EMP-10
+    category: termination_grounds
+    when: {cause_undefined_or_vague: true}
+    basis: norm
+    metric: cause_definition_present
+    severity: medium
+    message: >-
+      Cause is defined broadly enough to cover ordinary performance, with no closed
+      list and no cure period.
+
+  - id: R-EMP-11
+    category: variable_pay_clawback
+    when: {clawback_on_resignation: true}
+    basis: statutory
+    source: {act: indian_contract_act_1872, section: "74", corpus_id: ica_1872}
+    anchors: ["reasonable compensation not exceeding"]
+    severity: medium
+    message: >-
+      Recovers pay you already earned simply because you resigned.
+
+  - id: R-EMP-12
+    category: confidentiality
+    when: {all: [{perpetual: true}, {excludes_public_information: false}]}
+    basis: norm
+    metric: confidentiality_years
+    severity: low
+    message: >-
+      Confidentiality runs indefinitely with no carve-out for information that is
+      already public.
+
+  - id: R-EMP-13
+    category: dispute_resolution
+    when: {arbitrator_appointed_by_one_side: true}
+    basis: norm
+    metric: arbitrator_appointment
+    severity: medium
+    message: >-
+      One side alone appoints the arbitrator.
+
+  - id: R-EMP-14
+    category: probation_and_confirmation
+    when: {probation_extendable_without_limit: true}
+    basis: norm
+    metric: probation_months
+    severity: medium
+    message: >-
+      Probation can be extended with no stated ceiling.
+
+  - id: R-EMP-15
+    category: drafting_defect
+    # Read from the text by pattern, never from the model. A template field left
+    # unfilled is either there or it is not, and an audit that misses the fact
+    # that the contracting party is literally "[Company Name]" has missed the
+    # most basic thing about the document.
+    when: {unfilled_placeholder: true}
+    basis: norm
+    metric: unfilled_placeholder
+    severity: high
+    # High on the norm tier has to name the condition that makes the case severe, because there is no statute or regulator behind the number.
+    # Here the trigger is that condition: the rule only fires on the adverse form.
+    escalate_to_high_when: {unfilled_placeholder: true}
+    message: >-
+      A blank from the template was never filled in. Check what it should say before
+      signing, because an unfilled party name, city or date leaves the term it was
+      meant to carry undefined.
+
+  - id: R-EMP-16
+    category: working_hours
+    # Read from the text: a days range and a times range multiplied out. Indian
+    # offer letters state "Monday - Saturday" and "11:00AM - 8:00PM" separately
+    # and leave the reader to do the arithmetic, which nobody does. A 54 hour
+    # week can sit in plain sight on page one and go unremarked.
+    when: {weekly_hours: {gt: 48}}
+    basis: norm
+    metric: weekly_hours
+    severity: high
+    # High on the norm tier has to name the condition that makes the case severe, because there is no statute or regulator behind the number.
+    # Here the trigger is that condition: the rule only fires on the adverse form.
+    # The cap is on working time, and a rest interval is not working time. Nine to
+    # six across six days spans 54 hours, but with the hour's break these Acts
+    # require it is 48. High only when the week is over 48 after that hour.
+    escalate_to_high_when: {weekly_hours_net: {gt: 48}}
+    message: >-
+      The stated days and timings add up to more than 48 hours a week, counting any
+      breaks inside them. State shops and establishments Acts generally cap working
+      time at 48 hours a week and 9 hours a day, not counting rest intervals, so ask
+      how breaks and extra hours are counted and whether overtime is paid.
+
+  - id: R-EMP-17
+    category: exit_terms
+    when: {settlement_conditional: true}
+    basis: norm
+    metric: settlement_conditional
+    severity: high
+    # High on the norm tier has to name the condition that makes the case severe, because there is no statute or regulator behind the number.
+    # Here the trigger is that condition: the rule only fires on the adverse form.
+    escalate_to_high_when: {settlement_conditional: true}
+    message: >-
+      Money you have already earned, or a certificate recording work you have already
+      done, is held back until you satisfy another condition. Wages earned are payable
+      whether or not notice is served, so ask for that separated from the notice term.
+
+  - id: R-EMP-18
+    category: compensation
+    when: {unpaid_work_period: true}
+    basis: norm
+    metric: unpaid_work_period
+    severity: high
+    # High on the norm tier has to name the condition that makes the case severe, because there is no statute or regulator behind the number.
+    # Here the trigger is that condition: the rule only fires on the adverse form.
+    escalate_to_high_when: {unpaid_work_period: true}
+    message: >-
+      A period of work here is unpaid. Training, induction and orientation are work
+      when the employer directs them, so ask for this period to be paid or removed.
+
+  - id: R-EMP-19
+    category: incorporated_terms
+    when: {material_terms_elsewhere: true}
+    basis: norm
+    metric: material_terms_elsewhere
+    severity: medium
+    message: >-
+      A term that matters is defined somewhere you have not been shown, such as a
+      separate agreement or a policy the employer can change. Ask for the document
+      before you sign, because you are agreeing to whatever it says.

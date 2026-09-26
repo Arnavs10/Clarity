@@ -1,0 +1,334 @@
+{
+ "audit": {
+  "doc_type": "loan",
+  "clauses": 27,
+  "flagged": 3,
+  "skipped_by_triage": 2,
+  "high": 0,
+  "results": [
+   {
+    "index": 0,
+    "heading": "MODEL AGREEMENT - INDIA / UNSECURED PERSONAL CREDIT",
+    "text": "MODEL AGREEMENT - INDIA / UNSECURED PERSONAL CREDIT\nPERSONAL LOAN AGREEMENT\nExecution date: 15 September 2026 | Place: New Delhi, India | Document ID: TEST-LOAN-2026-001\nFICTIONAL TRAINING DOCUMENT. All persons, addresses, figures and facts below are invented for testing a contract-analysis application.\nThis document has no legal effect, is not issued by any bank, NBFC or government authority, and is not intended as legal advice.\nThis Personal Loan Agreement (\"Loan Agreement\") records a fictional unsecured personal loan between the lender and\nborrower described below. The commercial terms are intentionally realistic and include several provisions that a clause auditor\nmay wish to flag for review.\nPARTIES AND COMMERCIAL TERMS\nLender Northbridge Capital Services Pvt. Ltd. (fictional), CIN placeholder: TESTCIN000000, New Delhi\nBorrower Kunal Verma, age 34, contact: kunal.verma@example.test\nLoan Purpose Home relocation and personal expenses; no prohibited end-use represented\nPrincipal INR 8,75,000\nInterest 14.75% per annum, fixed for the initial 24 months; subject to Clause 6 thereafter\nTenure 36 monthly instalments commencing 05 October 2026\nProcessing Fee 2.25% of principal + applicable taxes, deducted from disbursement\nSecurity Unsecured personal loan; no collateral described\nIndicative EMI Approximately INR 30,090, subject to actual disbursement date and final amortisation\nRECITALS",
+    "triage_keep": false,
+    "extraction_failed": false,
+    "findings": [],
+    "reassurances": []
+   },
+   {
+    "index": 1,
+    "heading": "(A) The Borrower has requested a personal loan. (B) The Lender has agreed to make the Principal available subject to the",
+    "text": "(A) The Borrower has requested a personal loan. (B) The Lender has agreed to make the Principal available subject to the\nterms below. (C) The parties wish to document repayment, default, costs, information handling and dispute procedures.",
+    "triage_keep": true,
+    "extraction_failed": false,
+    "findings": [],
+    "reassurances": []
+   },
+   {
+    "index": 2,
+    "heading": "1. Disbursement",
+    "text": "1. Disbursement\nSubject to completion of the Lender's stated documentation and verification requirements, the net disbursement shall be credited to\nthe Borrower's nominated bank account after deduction of the Processing Fee and any other disclosed deductions. The loan is\ndeemed disbursed when the Lender issues the transaction confirmation.",
+    "triage_keep": true,
+    "extraction_failed": false,
+    "findings": [],
+    "reassurances": []
+   },
+   {
+    "index": 3,
+    "heading": "2. Repayment",
+    "text": "2. Repayment\nThe Borrower shall repay the Principal and applicable interest through 36 monthly instalments. The due date is the 5th calendar day of\neach month unless a bank holiday causes processing to occur on the next business day. The Lender may present electronic debit\ninstructions in accordance with the mandate provided by the Borrower.",
+    "triage_keep": true,
+    "extraction_failed": false,
+    "findings": [],
+    "reassurances": []
+   },
+   {
+    "index": 4,
+    "heading": "3. Application of Payments",
+    "text": "3. Application of Payments\nUnless required otherwise by applicable law, payments may be appropriated first to taxes and costs, then overdue charges and\ninterest, and finally to principal. A payment received without a written allocation instruction shall be applied using the Lender's\nstandard servicing waterfall.",
+    "triage_keep": true,
+    "extraction_failed": false,
+    "findings": [],
+    "reassurances": []
+   },
+   {
+    "index": 5,
+    "heading": "4. Processing Fee",
+    "text": "4. Processing Fee\nA Processing Fee equal to 2.25% of the Principal, plus applicable taxes, shall be payable at disbursement and may be deducted from\nthe gross amount otherwise payable to the Borrower. The fee compensates the Lender for origination and administrative services.",
+    "triage_keep": true,
+    "extraction_failed": false,
+    "findings": [],
+    "reassurances": []
+   },
+   {
+    "index": 6,
+    "heading": "5. Interest Calculation",
+    "text": "5. Interest Calculation\nInterest accrues on the outstanding principal at the stated annual rate using the Lender's standard daily accrual convention and actual\ndays elapsed. The amortisation schedule supplied after disbursement shall show the instalment breakdown between principal and\ninterest.",
+    "triage_keep": true,
+    "extraction_failed": false,
+    "findings": [],
+    "reassurances": []
+   },
+   {
+    "index": 7,
+    "heading": "6. Rate Review After Initial Period",
+    "text": "6. Rate Review After Initial Period\nAfter the first 24 months, the Lender may revise the interest rate once by up to 2.50 percentage points per annum where there is a\ndocumented change in the Borrower's credit risk or in the Lender's funding benchmark. The revised rate shall be notified at least 15\ndays before the revised rate takes effect.\nTEST FLAG: Rate-change discretion is capped but still depends on broad credit-risk/funding language.",
+    "triage_keep": true,
+    "extraction_failed": false,
+    "findings": [],
+    "reassurances": []
+   },
+   {
+    "index": 8,
+    "heading": "7. Late Charges",
+    "text": "7. Late Charges\nFor any instalment not paid by the due date, the Borrower shall pay a late charge of 2% per month on the overdue instalment amount,\ncalculated for the period of delay, together with applicable taxes if lawfully chargeable. A late charge does not relieve the Borrower\nfrom the underlying instalment obligation.\nTEST FLAG: High recurring late-charge language; useful as a risk/consumer-fairness test case.",
+    "triage_keep": true,
+    "extraction_failed": false,
+    "findings": [],
+    "reassurances": []
+   },
+   {
+    "index": 9,
+    "heading": "8. Prepayment and Foreclosure",
+    "text": "8. Prepayment and Foreclosure\nThe Borrower may request part-prepayment or full foreclosure. Unless a lower fee is required by applicable regulation or specifically\nwaived in writing, the Lender may charge 5% of the prepaid principal for full or partial prepayment before completion of 12 months,\nplus applicable taxes and documented third-party charges.",
+    "triage_keep": true,
+    "extraction_failed": false,
+    "findings": [
+     {
+      "heading": null,
+      "clause_text": null,
+      "rule_id": "R-LOAN-10",
+      "category": "prepayment_and_foreclosure",
+      "basis": "norm",
+      "source": null,
+      "from_text": false,
+      "evidence": null,
+      "severity": "medium",
+      "risky": true,
+      "message": "Repaying early costs extra.",
+      "note": null,
+      "citation_source": null,
+      "citation_span": null,
+      "verified": true
+     }
+    ],
+    "reassurances": []
+   },
+   {
+    "index": 10,
+    "heading": "9. Statements and Records",
+    "text": "9. Statements and Records\nThe Lender may provide electronic account statements. Unless the Borrower disputes a statement within 30 days of receipt, the\nstatement shall be treated as accepted for routine servicing purposes, without limiting rights that cannot lawfully be waived.",
+    "triage_keep": true,
+    "extraction_failed": false,
+    "findings": [],
+    "reassurances": []
+   },
+   {
+    "index": 11,
+    "heading": "10. Auto-Debit Mandate",
+    "text": "10. Auto-Debit Mandate\nThe Borrower authorises the Lender to submit repayment instructions under the electronic mandate supplied. If a debit is returned\nunpaid, the Borrower shall reimburse any bank or network charges actually imposed, subject to applicable law.\nAUDITOR ATTENTION\nThe next page contains deliberately strong default, cross-default, indemnity and information-sharing provisions. These are written to resemble\nreal commercial drafting while remaining synthetic.",
+    "triage_keep": true,
+    "extraction_failed": false,
+    "findings": [],
+    "reassurances": []
+   },
+   {
+    "index": 12,
+    "heading": "11. Events of Default",
+    "text": "11. Events of Default\nAn Event of Default occurs if the Borrower fails to pay an amount for 10 days after written demand; materially breaches this\nAgreement; provides materially false information; becomes subject to insolvency proceedings; or materially defaults on another\nfinancial obligation where that default is reasonably likely to affect repayment capacity.",
+    "triage_keep": true,
+    "extraction_failed": false,
+    "findings": [],
+    "reassurances": []
+   },
+   {
+    "index": 13,
+    "heading": "12. Acceleration",
+    "text": "12. Acceleration\nFollowing an Event of Default, and subject to any mandatory notice or cure period, the Lender may declare all outstanding Principal,\naccrued interest and contractually due charges immediately payable. The Borrower shall also reimburse reasonable enforcement\ncosts to the extent permitted by law.\nTEST FLAG: Acceleration creates a large immediate payment obligation; useful as a high-severity flag.",
+    "triage_keep": true,
+    "extraction_failed": false,
+    "findings": [],
+    "reassurances": []
+   },
+   {
+    "index": 14,
+    "heading": "13. Cross-Default",
+    "text": "13. Cross-Default\nA default under another loan, credit card, guarantee or material financial commitment may be treated as an Event of Default under this\nAgreement if the Lender reasonably believes the other default creates a material risk to repayment.\nTEST FLAG: Broad cross-default wording; trigger is based on the Lender's belief rather than an objective threshold.",
+    "triage_keep": true,
+    "extraction_failed": false,
+    "findings": [],
+    "reassurances": []
+   },
+   {
+    "index": 15,
+    "heading": "14. Set-Off",
+    "text": "14. Set-Off\nTo the extent permitted by applicable law, the Lender may set off matured amounts due under this Agreement against credit balances\nor amounts otherwise payable by the Lender to the Borrower, after giving notice of the exercise of set-off.",
+    "triage_keep": true,
+    "extraction_failed": false,
+    "findings": [
+     {
+      "heading": null,
+      "clause_text": null,
+      "rule_id": "R-LOAN-08",
+      "category": "set_off_and_lien",
+      "basis": "norm",
+      "source": null,
+      "from_text": false,
+      "evidence": null,
+      "severity": "medium",
+      "risky": true,
+      "message": "Money in your other accounts with this lender can be applied to this loan. Check whether notice is required first and whether it is limited to amounts already due.",
+      "note": null,
+      "citation_source": null,
+      "citation_span": null,
+      "verified": true
+     }
+    ],
+    "reassurances": []
+   },
+   {
+    "index": 16,
+    "heading": "15. Indemnity",
+    "text": "15. Indemnity\nThe Borrower shall indemnify the Lender against direct losses, reasonable professional expenses and third-party claims arising from\nthe Borrower's fraud, wilful misconduct, material misrepresentation or breach of the Agreement, except to the extent caused by the\nLender's own unlawful conduct or negligence where such exclusion is required by law.\nTEST FLAG: Broad reimbursement language; useful for testing scope and carve-outs.",
+    "triage_keep": true,
+    "extraction_failed": false,
+    "findings": [],
+    "reassurances": []
+   },
+   {
+    "index": 17,
+    "heading": "16. Information and Sharing",
+    "text": "16. Information and Sharing\nThe Borrower authorises the Lender to collect, retain, verify and process information necessary to administer the loan and to share\nrelevant information with service providers, credit-information agencies, insurers, auditors, collection vendors, affiliates and\nprospective assignees, subject to applicable law and stated privacy practices.\nTEST FLAG: Wide recipient list and broad purpose language; useful privacy-consent flag.",
+    "triage_keep": true,
+    "extraction_failed": false,
+    "findings": [],
+    "reassurances": []
+   },
+   {
+    "index": 18,
+    "heading": "17. Assignment",
+    "text": "17. Assignment\nThe Lender may assign, transfer or participate its rights under this Agreement to an affiliate, financial institution, securitisation vehicle\nor other permitted transferee, subject to applicable law. The Borrower may not assign the Borrower's obligations without the Lender's\nwritten consent.",
+    "triage_keep": true,
+    "extraction_failed": false,
+    "findings": [
+     {
+      "heading": null,
+      "clause_text": null,
+      "rule_id": "R-LOAN-12",
+      "category": "assignment_and_securitisation",
+      "basis": "norm",
+      "source": null,
+      "from_text": false,
+      "evidence": null,
+      "severity": "medium",
+      "risky": true,
+      "message": "The loan can be sold on to someone else without telling you.",
+      "note": null,
+      "citation_source": null,
+      "citation_span": null,
+      "verified": true
+     }
+    ],
+    "reassurances": []
+   },
+   {
+    "index": 19,
+    "heading": "18. Change in Contact Details",
+    "text": "18. Change in Contact Details\nThe Borrower shall notify the Lender within seven days of a change in postal address, email address, mobile number or employment\nstatus. Notices sent to the most recently notified contact details shall be treated as delivered in accordance with applicable law.",
+    "triage_keep": true,
+    "extraction_failed": false,
+    "findings": [],
+    "reassurances": []
+   },
+   {
+    "index": 20,
+    "heading": "19. Fees and Other Costs",
+    "text": "19. Fees and Other Costs\nThe Borrower shall pay applicable statutory charges, taxes and third-party costs expressly identified in the tariff, schedule or account\nstatement. No fee may be imposed if prohibited by law or if disclosure is legally required but was not made.\nTEST FLAG: The phrase \"third-party costs\" is intentionally broad for audit testing.",
+    "triage_keep": true,
+    "extraction_failed": false,
+    "findings": [],
+    "reassurances": []
+   },
+   {
+    "index": 21,
+    "heading": "20. Waiver",
+    "text": "20. Waiver\nFailure or delay by the Lender to exercise a right shall not operate as a waiver of that right. Any waiver shall be effective only if\nrecorded in writing for the specific instance stated.",
+    "triage_keep": true,
+    "extraction_failed": false,
+    "findings": [],
+    "reassurances": []
+   },
+   {
+    "index": 22,
+    "heading": "21. Notices",
+    "text": "21. Notices\nNotices may be delivered by email, SMS alert, courier, registered post or other legally recognised electronic means to the latest\ncontact details provided by the Borrower. A notice is deemed received according to applicable law or, where law is silent, on the next\nbusiness day after transmission without a delivery failure notice.",
+    "triage_keep": true,
+    "extraction_failed": false,
+    "findings": [],
+    "reassurances": []
+   },
+   {
+    "index": 23,
+    "heading": "22. Governing Law and Jurisdiction",
+    "text": "22. Governing Law and Jurisdiction\nThis Agreement is governed by the laws of India. Subject to mandatory statutory forums and remedies, disputes may be brought\nbefore courts and tribunals having lawful jurisdiction over the Lender's principal office or the Borrower's residence, as applicable.\nTEST FLAG: Non-exclusive and dual-location forum wording can create interpretive issues.",
+    "triage_keep": true,
+    "extraction_failed": false,
+    "findings": [],
+    "reassurances": []
+   },
+   {
+    "index": 24,
+    "heading": "23. Severability",
+    "text": "23. Severability\nIf any provision is held invalid, illegal or unenforceable, it shall be modified to the minimum extent necessary or severed, and the\nremainder shall continue in effect.",
+    "triage_keep": false,
+    "extraction_failed": false,
+    "findings": [],
+    "reassurances": []
+   },
+   {
+    "index": 25,
+    "heading": "24. Entire Agreement and Amendments",
+    "text": "24. Entire Agreement and Amendments\nThis Agreement, the final repayment schedule and any expressly incorporated application or disclosure form constitute the\nunderstanding between the parties regarding the Loan. An amendment that materially changes a financial obligation should be\ndocumented in a form permitted by applicable law.",
+    "triage_keep": true,
+    "extraction_failed": false,
+    "findings": [],
+    "reassurances": []
+   },
+   {
+    "index": 26,
+    "heading": "25. Regulatory Compliance",
+    "text": "25. Regulatory Compliance\nThe Lender and Borrower shall each comply with applicable laws, regulatory directions and court orders affecting performance of this\nAgreement. Nothing in this Agreement is intended to waive any mandatory statutory consumer, privacy, banking or dispute-resolution\nright.\nSCHEDULE 1 - ILLUSTRATIVE REPAYMENT SNAPSHOT\nGross Principal INR 8,75,000\nIllustrative Processing Fee INR 19,687.50 plus applicable taxes\nIllustrative Tenure 36 months\nIllustrative Rate 14.75% p.a. for first 24 months; thereafter subject to Clause 6\nIllustrative EMI About INR 30,090, to be confirmed in the final schedule\nIllustrative Total Scheduled Approximately INR 10.83 lakh before any optional prepayments, late charges or rate review effects\nPayments\nSIGNATURES\nLENDER - AUTHORISED SIGNATORY BORROWER\nAnanya Rao, fictional signatory Kunal Verma\nSignature: __________________________ Signature: __________________________\nDate: ______________________________ Date: ______________________________",
+    "triage_keep": true,
+    "extraction_failed": false,
+    "findings": [],
+    "reassurances": []
+   }
+  ],
+  "extraction_available": true,
+  "checks": [
+   "assignment and securitisation",
+   "default and acceleration",
+   "disclosure and kfs",
+   "dispute resolution",
+   "guarantor obligations",
+   "insurance bundling",
+   "interest rate",
+   "penal charges",
+   "prepayment and foreclosure",
+   "recovery and repossession",
+   "set off and lien"
+  ],
+  "unread": 0,
+  "type_status": "ok",
+  "type_suggested": null,
+  "type_message": null,
+  "draft_allowed": true,
+  "warning": null,
+  "disclaimer": "Flags for review, not legal advice."
+ },
+ "draft": {
+  "draft": "I have read through the loan agreement and there are 3 points I would like to discuss before signing.\n\n1. Clause \"8. Prepayment and Foreclosure\". Repaying early costs extra.\n   As drafted: \"The Borrower may request part-prepayment or full foreclosure. Unless a lower fee is required by applicable regulation or specifically waived in writing, the Lender may charge 5% of the prepaid principal for full or partial prepayment before completion of 12 mo...\"\n\n2. Clause \"14. Set-Off\". Money in your other accounts with this lender can be applied to this loan. Check whether notice is required first and whether it is limited to amounts already due.\n   As drafted: \"To the extent permitted by applicable law, the Lender may set off matured amounts due under this Agreement against credit balances or amounts otherwise payable by the Lender to the Borrower, after giving notice of the exercise of set-off.\"\n\n3. Clause \"17. Assignment\". The loan can be sold on to someone else without telling you.\n   As drafted: \"The Lender may assign, transfer or participate its rights under this Agreement to an affiliate, financial institution, securitisation vehicle or other permitted transferee, subject to applicable law. The Borrower may not assign the Borrower's obligations witho...\"\n\nCould we go through these before I sign? Happy to discuss.",
+  "written_by": "template",
+  "note": "Read it, edit it, send it yourself. Nothing is sent for you."
+ }
+}

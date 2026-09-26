@@ -1,0 +1,81 @@
+slug: loan
+label: Loan Agreement
+jurisdiction: IN
+version: 1
+
+corpus:
+  - id: ica_1872
+    name: Indian Contract Act 1872 (ss. 23, 73, 74)
+    path: data/corpus/loan/indian_contract_act_1872.txt
+  - id: rbi_penal_2023
+    name: RBI Fair Lending Practice, Penal Charges in Loan Accounts (18 Aug 2023)
+    path: data/corpus/loan/rbi_penal_charges_2023.txt
+
+taxonomy:
+  - id: interest_rate
+    desc: Rate, whether fixed or floating, and how and when it resets
+    watch: Reset at the lender's sole discretion with no reference benchmark
+
+  - id: penal_charges
+    desc: What is charged when a payment is missed
+    watch: Charged as penal interest added to the rate, or compounded on itself
+
+  - id: prepayment_and_foreclosure
+    desc: Cost of repaying early or closing the loan ahead of term
+    watch: A prepayment penalty on a floating rate loan to an individual
+
+  - id: processing_and_fees
+    desc: Processing fee, documentation, valuation and other upfront charges
+    watch: Fees that are non-refundable even if the loan is never disbursed
+
+  - id: security_and_collateral
+    desc: What secures the loan and what happens to it
+    watch: Security extending to assets unrelated to this loan
+
+  - id: guarantor_obligations
+    desc: Personal guarantee and what it exposes the guarantor to
+    watch: A guarantee with no cap and no end date
+
+  - id: default_and_acceleration
+    desc: What counts as default and when the whole balance becomes due
+    watch: Acceleration with no notice and no chance to cure
+
+  - id: recovery_and_repossession
+    desc: How the lender recovers, including agents and repossession
+    watch: Repossession without notice, or recovery contact at any hour
+
+  - id: disclosure_and_kfs
+    desc: What the lender must tell the borrower, and the Key Fact Statement
+    watch: Charges referred to but not quantified anywhere in the document
+
+  - id: insurance_bundling
+    desc: Insurance the borrower is required to buy alongside the loan
+    watch: Cover required from a named insurer with the premium added to the loan
+
+  - id: assignment_and_securitisation
+    desc: The lender's right to sell or transfer the loan
+    watch: Assignment to anyone at any time with no notice to the borrower
+
+  - id: set_off_and_lien
+    desc: The lender taking money from the borrower's other accounts
+    watch: Set-off across unrelated accounts without notice
+
+  - id: dispute_resolution
+    desc: Arbitration, seat, governing law, jurisdiction
+    watch: Jurisdiction fixed to the lender's home city
+
+  - id: boilerplate
+    desc: Recitals, definitions, addresses, severability, signature blocks
+    watch: null
+
+severity_scale: [none, low, medium, high]
+
+# Verified 31 Aug 2026 against the RBI circular on rbi.org.in and the bare Act.
+anchors:
+  - RBI circular DoR.MCS.REC.28/01.01.001/2023-24 dated 18 August 2023 requires a penalty for non-compliance to be levied as a penal charge, not as penal interest added to the rate of interest
+  - The same circular bars capitalisation of penal charges, meaning no further interest may be computed on them
+  - The same circular requires penal charges to be reasonable and commensurate with the non-compliance, and not discriminatory within a loan or product category
+  - The same circular bars penal charges on individual borrowers for non-business purposes from exceeding those applied to non-individual borrowers for similar non-compliance
+  - The same circular requires the quantum and reason for penal charges to be disclosed in the loan agreement and the Key Fact Statement
+  - These instructions took effect on 1 January 2024 and bind entities regulated by the RBI
+  - Section 74 Indian Contract Act 1872 allows only reasonable compensation for breach, not a stipulated penalty, whatever figure the contract names

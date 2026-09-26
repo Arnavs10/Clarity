@@ -1,0 +1,101 @@
+slug: rental
+label: Residential Rental Agreement
+jurisdiction: IN
+version: 1
+
+# Statutes the retriever is allowed to ground findings in for this type.
+# Paths are filled in during Phase 2 once the corpus is downloaded.
+corpus:
+  - id: mta_2021
+    name: Model Tenancy Act 2021
+    path: data/corpus/rental/model_tenancy_act_2021.txt
+  - id: tpa_1882
+    name: Transfer of Property Act 1882 (ss. 105-117)
+    path: data/corpus/rental/transfer_of_property_act_1882.txt
+  - id: reg_1908
+    name: Registration Act 1908 (s. 17)
+    path: data/corpus/rental/registration_act_1908.txt
+  - id: ica_1872
+    name: Indian Contract Act 1872 (s. 74)
+    path: data/corpus/rental/indian_contract_act_1872.txt
+
+# Every clause gets exactly one category. "boilerplate" is the catch-all for
+# text that carries no negotiable risk.
+taxonomy:
+  - id: rent_and_escalation
+    desc: Rent amount, escalation percentage, escalation frequency, payment mode
+    watch: Escalation above 10 percent a year, or escalation left undefined
+
+  - id: security_deposit
+    desc: Deposit amount, refund window, forfeiture conditions
+    watch: Deposit above 2 months rent for residential, or forfeiture at sole discretion
+
+  - id: lock_in_period
+    desc: Minimum stay commitment and the penalty for leaving early
+    watch: Lock-in binding only on the tenant, or penalty equal to the full deposit
+
+  - id: notice_period
+    desc: Notice required to terminate, by either side
+    watch: Asymmetric notice, where the landlord needs less than the tenant
+
+  - id: maintenance_and_repairs
+    desc: Split of structural repairs, fittings, and routine upkeep
+    watch: All repairs pushed onto the tenant regardless of cause
+
+  - id: entry_and_inspection
+    desc: Landlord right of entry and the notice required first
+    watch: Entry at will, or no stated causes for entry
+
+  - id: subletting_and_guests
+    desc: Restrictions on subletting, long-stay guests, occupancy count
+    watch: Guest restrictions so tight they are unenforceable in practice
+
+  - id: use_restrictions
+    desc: Permitted use of the premises, profession or trade restrictions
+    watch: Restrictions on ordinary lawful use, pets banned with deposit forfeit attached
+
+  - id: alterations
+    desc: What the tenant may install, fix, or change
+    watch: Tenant funds improvements that vest with the landlord on exit
+
+  - id: renewal_terms
+    desc: Renewal mechanism, auto-renewal, renegotiation trigger
+    watch: Automatic renewal on landlord terms with no tenant opt-out
+
+  - id: termination_and_eviction
+    desc: Grounds for termination and the process that follows
+    watch: Eviction on vague grounds, or forfeiture without a cure period
+
+  - id: dispute_resolution
+    desc: Arbitration, jurisdiction, governing law
+    watch: Arbitration seated far from the property, landlord picks the arbitrator
+
+  - id: registration_and_stamp_duty
+    desc: Who registers, who pays stamp duty, whether the deed is registered at all
+    watch: An 11 month term used purely to sidestep registration
+
+  - id: boilerplate
+    desc: Recitals, definitions, addresses, severability, signature blocks
+    watch: null
+
+severity_scale: [none, low, medium, high]
+
+# Anchors are short factual reference points the labeler keeps visible while
+# working. They are not the retrieval corpus and are never cited directly.
+# Verified 11 Sep 2026 against the Model Tenancy Act itself, from the Ministry of
+# Housing and Urban Affairs.
+#
+# An earlier pass verified these against PRS Legislative Research's summary of the
+# Act rather than the Act, and deleted the 24 hour entry notice anchor on the
+# grounds that "the Act does not say this". Section 17 does say it. A summary is
+# not a source, and checking a claim against one is how a true claim gets deleted
+# and a false note ("the Act sets no notice period") gets shipped in its place.
+anchors:
+  - Model Tenancy Act 2021 caps the security deposit at 2 months rent for residential premises and 6 months for non-residential
+  - Section 17 permits landlord entry only after at least twenty-four hours written or electronic notice to the tenant
+  - Where a contract provides for forfeiting a deposit as a penalty, section 74 of the Contract Act allows only reasonable compensation
+  - Model Tenancy Act 2021 requires the deposit to be refunded when vacant possession is taken back, after due deductions, with no fixed window stated
+  - Model Tenancy Act 2021 requires the written agreement to specify reasonable causes for landlord entry, rather than prescribing a notice period
+  - Model Tenancy Act 2021 caps holdover charges at twice the monthly rent for the first two months and four times thereafter
+  - Model Tenancy Act 2021 is a model law, binding only where a state has adopted it, and most states have not
+  - Leases of 12 months or more attract compulsory registration under s. 17 Registration Act 1908
