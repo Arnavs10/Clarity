@@ -383,17 +383,14 @@ function swap(home){
 // The public demo says what it is. With live audits off, the controls that would
 // send a document are hidden and the recorded samples are the interface.
 function publicMode(live, repo){
-  const run = repo ? ' <a href="'+esc(repo)+'" target="_blank" rel="noopener">Run Clarity '+
-    'on your own machine</a> to audit your own contract.' : "";
-  if(!live){
-    ["pick", "paste", "go"].forEach(id => $(id).classList.add("hide"));
-    $("samples-lead").textContent = "Open a recorded audit:";
-    $("public-note").innerHTML = "This public demo shows audits of fictional documents, "+
-      "recorded from a live run of the same code."+run;
-  } else {
-    $("public-note").innerHTML = "Live audits here share a free model allowance: a few "+
-      "documents a day, several minutes each. The samples open at once."+run;
-  }
+  // A live demo shows no note: the page explains the allowance only when it runs out.
+  if(live) return;
+  const a_link = repo ? '<a href="'+esc(repo)+'" target="_blank" rel="noopener">run Clarity '+
+    'on your own machine</a>' : "";
+  ["pick", "paste", "go"].forEach(id => $(id).classList.add("hide"));
+  $("samples-lead").textContent = "Open a recorded audit:";
+  $("public-note").innerHTML = "This public demo shows audits of fictional documents, "+
+    "recorded from a live run of the same code."+(a_link ? " To audit your own contract, "+a_link+"." : "");
   $("public-note").classList.remove("hide");
 }
 
