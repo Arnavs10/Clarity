@@ -10,9 +10,6 @@ you approve and send yourself.
 
 Flags for review. Not legal advice.
 
-A full walkthrough, in plain language and then technically, is in
-[EXPLAINER.md](EXPLAINER.md).
-
 ## Why it is built this way
 
 Most contract-risk tools ask a language model whether a clause looks risky. That is
