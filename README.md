@@ -380,10 +380,10 @@ To publish:
 
 ```bash
 python tools/prepush_check.py                  # fails on anything private
-bash deploy/push_space.sh <hf-user>/clarity    # the last commit, to a Render
+git push                                       # Render redeploys the latest commit automatically
 ```
 
-Then add `GROQ_API_KEY` as a secret in the Space's settings. `.prepush-deny` is a
+GROQ_API_KEY is set as an environment variable in Render's dashboard, not in the repo. `.prepush-deny` is a
 gitignored file with one term per line: the names that must never be published.
 `push_space.sh` gives the Space its own README header, pins packages to the versions
 installed locally, and leaves out the statute index, which is rebuilt on first start.
