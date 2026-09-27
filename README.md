@@ -1,6 +1,7 @@
 # Clarity
 
 Grounded clause-risk review for Indian contracts.
+**Live demo:** https://clarity-qn80.onrender.com
 
 Upload a rent agreement, an offer letter or a loan agreement. An agent reads it
 clause by clause, applies rules grounded in Indian statute, and returns each finding
@@ -379,7 +380,7 @@ To publish:
 
 ```bash
 python tools/prepush_check.py                  # fails on anything private
-bash deploy/push_space.sh <hf-user>/clarity    # the last commit, to a Hugging Face Space
+bash deploy/push_space.sh <hf-user>/clarity    # the last commit, to a Render
 ```
 
 Then add `GROQ_API_KEY` as a secret in the Space's settings. `.prepush-deny` is a
@@ -469,7 +470,7 @@ web/samples/      recorded audits of fictional documents, for the public demo
 extension/        Manifest V3 browser extension
 app.py            Streamlit interface
 Dockerfile        the public demo's container
-deploy/           push to a Hugging Face Space
+deploy/           legacy Hugging Face push script, unused since the move to Render
 ```
 
 ## Limits
